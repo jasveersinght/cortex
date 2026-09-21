@@ -415,25 +415,8 @@ input, select, textarea { font-family: inherit; }
 }
 
 .apple-glow {
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  opacity: 0.6;
-  filter: blur(10px);
-  z-index: 1;
-  transition: opacity 0.3s ease;
+  display: none !important;
 }
-
-.apple-item:hover .apple-glow { opacity: 1; filter: blur(14px); }
-
-/* Color-specific glow effects for the 7 apples */
-.red-apple .apple-glow    { background: #ff4d4d; }
-.purple-apple .apple-glow { background: #a78bfa; }
-.amber-apple .apple-glow  { background: #fbbf24; }
-.cyan-apple .apple-glow   { background: #38bdf8; }
-.indigo-apple .apple-glow { background: #818cf8; }
-.emerald-apple .apple-glow{ background: #34d399; }
-.mint-apple .apple-glow   { background: #4ade80; }
 
 .apple-tag {
   margin-top: 8px;
