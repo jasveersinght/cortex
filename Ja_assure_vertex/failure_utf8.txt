@@ -1,0 +1,89 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\jasve\OneDrive\Desktop\atang\Ja_assure_vertex
+plugins: anyio-4.15.1
+collected 125 items / 124 deselected / 1 selected
+run-last-failure: rerun previous 1 failure
+
+tests\test_manager_pipeline.py F                                         [100%]
+
+================================== FAILURES ===================================
+________ TestResearchManagerPipeline.test_force_refresh_bypasses_cache ________
+
+self = <tests.test_manager_pipeline.TestResearchManagerPipeline object at 0x0000028C6BFED4D0>
+
+>   ???
+
+C:\Users\jasve\Ja_assure_vertex\tests\test_manager_pipeline.py:288: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+app\research\manager.py:355: in run
+    findings = self._generate_fallback_findings(brand, market, research_type.value, objective, run_id)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+app\research\manager.py:609: in _generate_fallback_findings
+    finding_type=FindingType.MARKET_GAP,
+                 ^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+cls = <enum 'FindingType'>, name = 'MARKET_GAP'
+
+    def __getattr__(cls, name):
+        """
+        Return the enum member matching `name`
+    
+        We use __getattr__ instead of descriptors or inserting into the enum
+        class' __dict__ in order to support `name` and `value` being both
+        properties for enum members (which live in the class' __dict__) and
+        enum members themselves.
+        """
+        if _is_dunder(name):
+            raise AttributeError(name)
+        try:
+            return cls._member_map_[name]
+        except KeyError:
+>           raise AttributeError(name) from None
+E           AttributeError: MARKET_GAP
+
+..\..\..\..\AppData\Local\Programs\Python\Python311\Lib\enum.py:786: AttributeError
+---------------------------- Captured stdout call -----------------------------
+2026-09-21 21:28:13,740 | INFO     | ja_assure | research.requested: brand=Jaguar Transit, market=Singapore, type=competitor_monitoring, competitors=0, topics=0
+2026-09-21 21:28:13,740 | INFO     | ja_assure | research.cache_miss: reason=force_refresh
+2026-09-21 21:28:13,741 | INFO     | ja_assure | Complexity score=1 -> MEDIUM
+2026-09-21 21:28:13,741 | INFO     | ja_assure | Research plan created: complexity=MEDIUM, queries=8, estimated_calls=11
+2026-09-21 21:28:13,741 | INFO     | ja_assure | research.planned: complexity=MEDIUM, queries=8, estimated_calls=11
+2026-09-21 21:28:13,741 | INFO     | ja_assure | research.tavily_completed: sources=1, calls=1, failed=0
+2026-09-21 21:28:13,744 | INFO     | ja_assure | research.normalized: input=1, output=1
+2026-09-21 21:28:13,744 | INFO     | ja_assure | research.deduplicated: removed=0, stats={'by_url': 0, 'by_content': 0, 'by_source': 0, 'total_removed': 0}
+2026-09-21 21:28:13,744 | INFO     | ja_assure | research.filtered: relevant=0, uncertain=1, irrelevant=0
+2026-09-21 21:28:13,744 | INFO     | ja_assure | research.change_detected: {'new': 1, 'changed': 0, 'unchanged': 0, 'removed': 0}
+2026-09-21 21:28:13,744 | INFO     | ja_assure | research.groq_started: evidence_count=1
+2026-09-21 21:28:13,744 | INFO     | ja_assure | research.groq_completed: findings_returned=0, insufficient=False
+2026-09-21 21:28:13,745 | INFO     | ja_assure | research.synthesizing_fallback_findings for Jaguar Transit (Singapore)
+2026-09-21 21:28:13,745 | ERROR    | ja_assure | research.failed: AttributeError: MARKET_GAP
+------------------------------ Captured log call ------------------------------
+INFO     ja_assure:manager.py:105 research.requested: brand=Jaguar Transit, market=Singapore, type=competitor_monitoring, competitors=0, topics=0
+INFO     ja_assure:manager.py:134 research.cache_miss: reason=force_refresh
+INFO     ja_assure:planner.py:80 Complexity score=1 -> MEDIUM
+INFO     ja_assure:planner.py:268 Research plan created: complexity=MEDIUM, queries=8, estimated_calls=11
+INFO     ja_assure:manager.py:191 research.planned: complexity=MEDIUM, queries=8, estimated_calls=11
+INFO     ja_assure:manager.py:207 research.tavily_completed: sources=1, calls=1, failed=0
+INFO     ja_assure:manager.py:238 research.normalized: input=1, output=1
+INFO     ja_assure:manager.py:244 research.deduplicated: removed=0, stats={'by_url': 0, 'by_content': 0, 'by_source': 0, 'total_removed': 0}
+INFO     ja_assure:manager.py:259 research.filtered: relevant=0, uncertain=1, irrelevant=0
+INFO     ja_assure:manager.py:274 research.change_detected: {'new': 1, 'changed': 0, 'unchanged': 0, 'removed': 0}
+INFO     ja_assure:manager.py:304 research.groq_started: evidence_count=1
+INFO     ja_assure:manager.py:308 research.groq_completed: findings_returned=0, insufficient=False
+INFO     ja_assure:manager.py:354 research.synthesizing_fallback_findings for Jaguar Transit (Singapore)
+ERROR    ja_assure:manager.py:411 research.failed: AttributeError: MARKET_GAP
+============================== warnings summary ===============================
+venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\jasve\OneDrive\Desktop\atang\Ja_assure_vertex\venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+venv\Lib\site-packages\starlette\testclient.py:53
+  C:\Users\jasve\OneDrive\Desktop\atang\Ja_assure_vertex\venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_manager_pipeline.py::TestResearchManagerPipeline::test_force_refresh_bypasses_cache
+================ 1 failed, 124 deselected, 2 warnings in 1.28s ================
