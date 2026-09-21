@@ -23,7 +23,7 @@ const AGENTS = {
     btnLabel: '▶ Run Discovery Agent',
   },
   analyze: {
-    icon: '🍇',
+    icon: '🍎',
     name: 'Analyze Agent',
     status: 'soon',
     desc: 'Deep-dive analysis across research data, surfacing patterns and strategic signals from market intelligence.',
@@ -33,7 +33,7 @@ const AGENTS = {
     btnLabel: 'Coming Soon',
   },
   content: {
-    icon: '🍊',
+    icon: '🍎',
     name: 'Create Agent',
     status: 'live',
     desc: 'Transform research insights into multi-platform campaign content — LinkedIn, Instagram, X — with A/B variants and visual concepts powered by Gemini.',
@@ -44,10 +44,10 @@ const AGENTS = {
       { dot: '#fbbf24', text: 'Built visual concept brief for SME campaign', time: '1d ago' },
     ],
     workspace: 'ws-content',
-    btnLabel: '🍊 Open Content Studio',
+    btnLabel: '🍎 Open Content Studio',
   },
   engage: {
-    icon: '🫐',
+    icon: '🍎',
     name: 'Engage Agent',
     status: 'soon',
     desc: 'Schedule, publish and track content engagement across channels with performance analytics.',
@@ -57,7 +57,7 @@ const AGENTS = {
     btnLabel: 'Coming Soon',
   },
   strategize: {
-    icon: '🔮',
+    icon: '🍎',
     name: 'Strategize Agent',
     status: 'soon',
     desc: 'Build strategic roadmaps from research intelligence, combining market and competitive signals.',
@@ -67,7 +67,7 @@ const AGENTS = {
     btnLabel: 'Coming Soon',
   },
   automate: {
-    icon: '🍏',
+    icon: '🍎',
     name: 'Automate Agent',
     status: 'soon',
     desc: 'Wire up automated workflows that trigger intelligence tasks based on market events and conditions.',
@@ -77,7 +77,7 @@ const AGENTS = {
     btnLabel: 'Coming Soon',
   },
   compliance: {
-    icon: '🛡️',
+    icon: '🍎',
     name: 'Monitor Agent',
     status: 'live',
     desc: 'Evaluate marketing content against MAS regulatory standards, brand guidelines, and claims accuracy.',
@@ -88,7 +88,7 @@ const AGENTS = {
       { dot: '#ff4d4d', text: 'Flagged promotional email — Suspicious', time: '1d ago' },
     ],
     workspace: 'ws-compliance',
-    btnLabel: '🛡️ Open Monitor Workspace',
+    btnLabel: '🍎 Open Monitor Workspace',
   },
 };
 
