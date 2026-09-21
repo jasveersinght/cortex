@@ -1,0 +1,15 @@
+{
+  "research_insight": {
+    "topic": "Insurance awareness",
+    "key_finding": "Young professionals often delay insurance decisions.",
+    "opportunity": "Create an educational campaign around early financial planning.",
+    "source": "Research Agent"
+  },
+  "product": "Term Insurance",
+  "target_audience": "Young Professionals",
+  "campaign_goal": "Lead Generation",
+  "platforms": ["LinkedIn", "Instagram", "X"],
+  "language": "English",
+  "tone": "Professional but human",
+  "content_format": "Campaign"
+}

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CORTEX · JA Assure AI Intelligence</title>
+  <meta name="description" content="CORTEX AI Ecosystem — 7 Intelligent Agents on One Dynamic Tree">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap">
+  <link rel="stylesheet" href="css/cortex.css">
+</head>
+<body class="env-sunset" id="cortex-body">
+
+  <!-- ── Dynamic Time-Aware Environment Layer ────── -->
+  <div id="env-canvas-container" class="env-canvas-container">
+    <div id="celestial-orb" class="celestial-orb"></div>
+    <div id="env-particles" class="env-particles"></div>
+    <!-- Layered Silhouette Hills -->
+    <div class="hills-layer hill-back"></div>
+    <div class="hills-layer hill-front"></div>
+  </div>
+
+  <!-- ── HOME PAGE ─────────────────────────────────── -->
+  <div id="page-home" class="page active">
+
+    <!-- Leaf animation layer -->
+    <div class="leaves-container" id="leaves-container"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="cortex-nav">
+      <div class="nav-brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8fba4e" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span class="nav-title">CORTEX</span>
+      </div>
+
+      <ul class="nav-links">
+        <li><a href="#" class="nav-link active" data-page="home" id="nav-home">Home</a></li>
+        <li><a href="#" class="nav-link" data-page="agents" id="nav-agents">Agents</a></li>
+        <li><a href="#" class="nav-link" data-page="insights" id="nav-insights">Insights</a></li>
+        <li><a href="#" class="nav-link" data-page="settings" id="nav-settings">Settings</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <!-- Time-Aware Environment Indicator & Selector -->
+        <div class="env-selector" id="env-selector-menu">
+          <div class="env-status-tag" id="env-status-tag" title="Click to change environment">
+            <span class="env-icon">🌅</span>
+            <span>Sunset · 18:27</span>
+          </div>
+          <div class="env-dropdown">
+            <div class="env-opt" onclick="applyEnvironment('dawn')">🌄 Dawn</div>
+            <div class="env-opt" onclick="applyEnvironment('day')">☀️ Day</div>
+            <div class="env-opt" onclick="applyEnvironment('sunset')">🌅 Sunset</div>
+            <div class="env-opt" onclick="applyEnvironment('night')">🌙 Night</div>
+          </div>
+        </div>
+
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Search agents...">
+        </div>
+        <div class="profile-avatar">J</div>
+      </div>
+    </nav>
+
+    <!-- Hero Copy (Left) -->
+    <div class="hero-copy">
+      <div class="hero-eyebrow">DIFFERENT PERSPECTIVES.<br>GREATER OUTCOMES.</div>
+      <h1 class="hero-headline">One Tree.<br>Many<br>Possibilities.</h1>
+      <p class="hero-sub">Pick an apple. Let the right intelligence work for you.</p>
+    </div>
+
+    <!-- ── Interactive Tree Stage ───────────────────── -->
+    <div class="tree-stage" id="tree-stage">
+      <!-- High-Res Isolated PNG Tree -->
+      <img src="images/tree_transparent.png" alt="CORTEX Intelligence Tree" class="tree-png-image" id="tree-png-image">
+
+      <!-- EXACTLY 7 GLOWING APPLES HANGING ON THE TREE -->
+      <div class="apple-hangers" id="apple-hangers">
+
+        <!-- 1. Discover Agent (Red Apple) -->
+        <div class="apple-item red-apple" data-agent="research" style="left:33%;top:20%" id="apple-research">
+          <div class="apple-string"></div>
+          <div class="apple-graphic">
+            <div class="apple-leaf"></div>
+            <div class="apple-body">🍎</div>
+            <div class="apple-glow"></div>
+          </div>
+          <div class="apple-tag">
+            <span class="tag-dot red"></span>
+            <span class="tag-name">Discover</span>
+          </div>
+        </div>
+
+        <!-- 2. Analyze Agent (Purple Apple) -->
+        <div class="apple-item purple-apple" data-agent="analyze" style="left:55%;top:15%" id="apple-analyze">
+          <div class="apple-string"></div>
+          <div class="apple-graphic">
+            <div class="apple-leaf"></div>
+            <div class="apple-body">🍇</div>
+            <div class="apple-glow"></div>
+          </div>
+          <div class="apple-tag">
+            <span class="tag-dot purple"></span>
+            <span class="tag-name">Analyze</span>
+          </div>
+        </div>
+
+        <!-- 3. Create Agent (Golden Apple) -->
+        <div class="apple-item amber-apple" data-agent="content" style="left:22%;top:38%" id="apple-content">
+          <div class="apple-string"></div>
+          <div class="apple-graphic">
+            <div class="apple-leaf"></div>
+            <div class="apple-body">🍊</div>
+            <div class="apple-glow"></div>
+          </div>
+          <div class="apple-tag">
+            <span class="tag-dot amber"></span>
+            <span class="tag-name">Create</span>
+          </div>
+        </div>
+
+        <!-- 4. Engage Agent (Cyan Apple) -->
+        <div class="apple-item cyan-apple" data-agent="engage" style="left:72%;top:24%" id="apple-engage">
+          <div class="apple-string"></div>
+          <div class="apple-graphic">
+            <div class="apple-leaf"></div>
+            <div class="apple-body">🫐</div>
+            <div class="apple-glow"></div>
+          </div>
+          <div class="apple-tag">
+            <span class="tag-dot cyan"></span>
+            <span class="tag-name">Engage</span>
+          </div>
+        </div>
+
+        <!-- 5. Strategize Agent (Indigo Apple) -->
+        <div class="apple-item indigo-apple" data-agent="strategize" style="left:28%;top:56%" id="apple-strategize">
+          <div class="apple-string"></div>
+          <div class="apple-graphic">
+            <div class="apple-leaf"></div>
+            <div class="apple-body">🔮</div>
+            <div class="apple-glow"></div>
+          </div>
+          <div class="apple-tag">
+            <span class="tag-dot indigo"></span>
+            <span class="tag-name">Strategize</span>
+          </div>
+        </div>
+
+        <!-- 6. Automate Agent (Emerald Apple) -->
+        <div class="apple-item emerald-apple" data-agent="automate" style="left:64%;top:46%" id="apple-automate">
+          <div class="apple-string"></div>
+          <div class="apple-graphic">
+            <div class="apple-leaf"></div>
+            <div class="apple-body">🍏</div>
+            <div class="apple-glow"></div>
+          </div>
+          <div class="apple-tag">
+            <span class="tag-dot emerald"></span>
+            <span class="tag-name">Automate</span>
+          </div>
+        </div>
+
+        <!-- 7. Monitor Agent (Mint Green Apple) -->
+        <div class="apple-item mint-apple" data-agent="compliance" style="left:48%;top:54%" id="apple-compliance">
+          <div class="apple-string"></div>
+          <div class="apple-graphic">
+            <div class="apple-leaf"></div>
+            <div class="apple-body">🛡️</div>
+            <div class="apple-glow"></div>
+          </div>
+          <div class="apple-tag">
+            <span class="tag-dot mint"></span>
+            <span class="tag-name">Monitor</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <!-- ── UNDERGROUND ROOTS SECTION ────────────────── -->
+    <section class="underground-section" id="underground-section">
+
+      <!-- Parallax depth soil layers -->
+      <div class="soil-layer soil-deep"   id="soil-deep"></div>
+      <div class="soil-layer soil-mid"    id="soil-mid"></div>
+      <div class="soil-layer soil-near"   id="soil-near"></div>
+      <div class="soil-particles"         id="soil-particles"></div>
+
+      <div class="underground-canvas-stage">
+
+        <!-- ── LAYER 1 (deepest/slowest parallax) real trunk + fat organic roots SVG -->
+        <div class="parallax-root-layer" id="prl-roots" data-speed="0.25">
+          <svg class="roots-svg" viewBox="0 0 1200 1100" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Trunk Base Gradient: Natural warm brown wood -->
+              <linearGradient id="wood-trunk-top" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%"   stop-color="#8b5e3c" stop-opacity="1" />
+                <stop offset="40%"  stop-color="#6b3f22" stop-opacity="1" />
+                <stop offset="100%" stop-color="#3d2210" stop-opacity="0.95" />
+              </linearGradient>
+
+              <!-- Main Root Gradient: Natural mid brown -->
+              <linearGradient id="wood-root-main" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%"   stop-color="#7c4e2a" stop-opacity="1" />
+                <stop offset="45%"  stop-color="#5a3219" stop-opacity="0.97" />
+                <stop offset="100%" stop-color="#2e1709" stop-opacity="0.9" />
+              </linearGradient>
+
+              <!-- Branch Root Gradient: Slightly lighter brown -->
+              <linearGradient id="wood-root-branch" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%"   stop-color="#8a5830" stop-opacity="0.95" />
+                <stop offset="55%"  stop-color="#59361c" stop-opacity="0.9" />
+                <stop offset="100%" stop-color="#301b0d" stop-opacity="0.8" />
+              </linearGradient>
+
+              <!-- Sub-Root Gradient: Dark tendril -->
+              <linearGradient id="wood-root-sub" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%"   stop-color="#9a6540" stop-opacity="0.85" />
+                <stop offset="100%" stop-color="#422512" stop-opacity="0.6" />
+              </linearGradient>
+
+              <!-- Glow Filters for agent tip nodes only -->
+              <filter id="glow-red">    <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="glow-purple"> <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="glow-amber">  <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="glow-cyan">   <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="glow-indigo"> <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="glow-emerald"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="glow-mint">   <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+
+            <!-- ══ CENTRAL TREE TRUNK BASE (Centered at X=600) ══ -->
+            <path d="M 600,0 C 600,150 600,400 600,800 C 599,910 600,1010 600,1088"
+                  stroke="url(#wood-trunk-top)" stroke-width="48" fill="none" stroke-linecap="square"/>
+            <!-- Bark Detail Strips -->
+            <path d="M 584,0 C 588,120 592,300 592,500" stroke="rgba(195,138,82,0.3)" stroke-width="7" fill="none" stroke-linecap="square"/>
+            <path d="M 600,0 C 600,120 600,300 600,500" stroke="rgba(35,18,7,0.5)"    stroke-width="5" fill="none" stroke-linecap="square"/>
+            <path d="M 616,0 C 612,120 609,300 609,500" stroke="rgba(160,105,55,0.25)" stroke-width="6" fill="none" stroke-linecap="square"/>
+
+            <!-- ══ ROOT 1: DISCOVER (Left Top Surface) ══ -->
+            <path d="M 585,0 C 525,25 440,50 355,90 C 280,125 210,160 140,210 C 90,245 55,270 70,315"
+                  stroke="url(#wood-root-main)" stroke-width="20" fill="none" stroke-linecap="round"/>
+            <path d="M 355,90 C 315,130 273,180 240,235" stroke="url(#wood-root-branch)" stroke-width="9" fill="none" stroke-linecap="round"/>
+            <path d="M 210,160 C 170,203 137,250 115,305" stroke="url(#wood-root-branch)" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <path d="M 140,210 C 107,247 83,287 63,337"  stroke="url(#wood-root-sub)"    stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <circle cx="70" cy="315" r="13" fill="#ff4d4d" opacity="0.95" filter="url(#glow-red)"/>
+            <circle cx="70" cy="315" r="5"  fill="#fff" opacity="0.9"/>
+
+            <!-- ══ ROOT 2: ANALYZE (Right Top Surface) ══ -->
+            <path d="M 615,0 C 675,25 760,50 845,90 C 920,125 990,160 1060,210 C 1110,235 1145,255 1185,275"
+                  stroke="url(#wood-root-main)" stroke-width="20" fill="none" stroke-linecap="round"/>
+            <path d="M 845,90 C 885,130 927,180 960,235" stroke="url(#wood-root-branch)" stroke-width="9" fill="none" stroke-linecap="round"/>
+            <path d="M 990,160 C 1030,203 1063,250 1085,305" stroke="url(#wood-root-branch)" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <circle cx="1185" cy="275" r="13" fill="#c084fc" opacity="0.95" filter="url(#glow-purple)"/>
+            <circle cx="1185" cy="275" r="5"  fill="#fff" opacity="0.9"/>
+
+            <!-- ══ ROOT 3: CREATE (Mid Left) ══ -->
+            <path d="M 588,30 C 525,75 435,125 345,195 C 265,265 195,345 125,435 C 82,495 50,545 55,640"
+                  stroke="url(#wood-root-main)" stroke-width="16" fill="none" stroke-linecap="round"/>
+            <path d="M 345,195 C 298,255 255,325 222,405" stroke="url(#wood-root-branch)" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M 195,345 C 155,400 125,460 105,530" stroke="url(#wood-root-branch)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <circle cx="55" cy="640" r="12" fill="#fbbf24" opacity="0.95" filter="url(#glow-amber)"/>
+            <circle cx="55" cy="640" r="5"  fill="#fff" opacity="0.9"/>
+
+            <!-- ══ ROOT 4: ENGAGE (Mid Right) ══ -->
+            <path d="M 612,30 C 675,75 765,125 855,195 C 935,265 1005,345 1075,435 C 1115,475 1145,510 1180,550"
+                  stroke="url(#wood-root-main)" stroke-width="16" fill="none" stroke-linecap="round"/>
+            <path d="M 855,195 C 902,255 945,325 978,405" stroke="url(#wood-root-branch)" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <path d="M 1005,345 C 1045,400 1075,460 1095,530" stroke="url(#wood-root-branch)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <circle cx="1180" cy="550" r="12" fill="#38bdf8" opacity="0.95" filter="url(#glow-cyan)"/>
+            <circle cx="1180" cy="550" r="5"  fill="#fff" opacity="0.9"/>
+
+            <!-- ══ ROOT 5: STRATEGIZE (Deep Left) ══ -->
+            <path d="M 590,90 C 510,165 410,260 315,375 C 235,475 170,570 110,680 C 78,738 50,785 70,875"
+                  stroke="url(#wood-root-main)" stroke-width="13" fill="none" stroke-linecap="round"/>
+            <path d="M 315,375 C 265,445 220,530 188,625" stroke="url(#wood-root-branch)" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <circle cx="70" cy="875" r="11" fill="#818cf8" opacity="0.95" filter="url(#glow-indigo)"/>
+            <circle cx="70" cy="875" r="4"  fill="#fff" opacity="0.9"/>
+
+            <!-- ══ ROOT 6: AUTOMATE (Deep Right) ══ -->
+            <path d="M 610,90 C 690,165 790,260 885,375 C 965,475 1030,570 1090,680 C 1122,738 1150,785 1180,800"
+                  stroke="url(#wood-root-main)" stroke-width="13" fill="none" stroke-linecap="round"/>
+            <path d="M 885,375 C 935,445 980,530 1012,625" stroke="url(#wood-root-branch)" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <circle cx="1180" cy="800" r="11" fill="#34d399" opacity="0.95" filter="url(#glow-emerald)"/>
+            <circle cx="1180" cy="800" r="4"  fill="#fff" opacity="0.9"/>
+
+            <!-- ══ ROOT 7: MONITOR (Deep Center Taproot) ══ -->
+            <path d="M 600,150 C 600,300 598,470 600,610 C 602,730 600,830 600,928"
+                  stroke="url(#wood-root-main)" stroke-width="18" fill="none" stroke-linecap="round"/>
+            <path d="M 600,360 C 550,392 492,410 432,418" stroke="url(#wood-root-branch)" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <path d="M 600,360 C 650,392 708,410 768,418" stroke="url(#wood-root-branch)" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <path d="M 600,580 C 545,608 482,622 422,626" stroke="url(#wood-root-branch)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M 600,580 C 655,608 718,622 778,626" stroke="url(#wood-root-branch)" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <circle cx="600" cy="928" r="14" fill="#4ade80" opacity="0.97" filter="url(#glow-mint)"/>
+            <circle cx="600" cy="928" r="6"  fill="#fff"   opacity="0.95"/>
+
+            <!-- Fine Wood Fibers & Tendrils -->
+            <path d="M 145,235 C 100,268 68,308 40,358"   stroke="#7c4e2a" stroke-width="2.5" fill="none" opacity="0.45" stroke-linecap="round"/>
+            <path d="M 1055,235 C 1100,268 1132,308 1160,358" stroke="#7c4e2a" stroke-width="2.5" fill="none" opacity="0.45" stroke-linecap="round"/>
+            <path d="M 125,515 C 82,552 52,598 25,652"    stroke="#5a3219" stroke-width="2"   fill="none" opacity="0.4"  stroke-linecap="round"/>
+            <path d="M 1075,425 C 1118,462 1148,508 1172,562" stroke="#5a3219" stroke-width="2"   fill="none" opacity="0.4"  stroke-linecap="round"/>
+          </svg>
+        </div><!-- /prl-roots -->
+
+        <!-- ── LAYER 2 (faster parallax) agent cards ── -->
+        <div class="parallax-root-layer root-cards-container" id="prl-cards" data-speed="0.5">
+
+          <!-- 1. Discover Root Card -->
+          <div class="root-card card-red" style="top: 100px; left: 20px;" onclick="openSidePanel('research')">
+            <div class="rc-badge red">🍎 DISCOVER ROOT</div>
+            <h3 class="rc-title">Market Intelligence &amp; Crawling</h3>
+            <p class="rc-desc">Deep-scans regional insurance trends, competitor moves, and Tavily search feeds in real-time.</p>
+            <div class="rc-tags"><span>Market Crawl</span><span>Trend Radar</span><span>SEO Signals</span></div>
+            <div class="rc-action">Click to Launch Agent →</div>
+          </div>
+
+          <!-- 2. Analyze Root Card -->
+          <div class="root-card card-purple" style="top: 100px; right: 20px;" onclick="openSidePanel('analyze')">
+            <div class="rc-badge purple">🍇 ANALYZE ROOT</div>
+            <h3 class="rc-title">Pattern Synthesis &amp; Anomaly Detection</h3>
+            <p class="rc-desc">Synthesizes multi-source data, correlates market metrics, and extracts high-leverage strategic signals.</p>
+            <div class="rc-tags"><span>Data Synthesis</span><span>Sentiment Correlation</span></div>
+            <div class="rc-action">Explore Capabilities →</div>
+          </div>
+
+          <!-- 3. Create Root Card -->
+          <div class="root-card card-amber" style="top: 380px; left: 10px;" onclick="openSidePanel('content')">
+            <div class="rc-badge amber">🍊 CREATE ROOT</div>
+            <h3 class="rc-title">Generative Copy &amp; Content Studio</h3>
+            <p class="rc-desc">Transforms market insights into multi-platform campaigns, LinkedIn posts, and ad copy tailored for SEA markets.</p>
+            <div class="rc-tags"><span>Campaign Copy</span><span>Social Content</span><span>Multi-lingua</span></div>
+            <div class="rc-action">Explore Capabilities →</div>
+          </div>
+
+          <!-- 4. Engage Root Card -->
+          <div class="root-card card-cyan" style="top: 380px; right: 10px;" onclick="openSidePanel('engage')">
+            <div class="rc-badge cyan">🫐 ENGAGE ROOT</div>
+            <h3 class="rc-title">Customer Touchpoint &amp; Lead Nurturing</h3>
+            <p class="rc-desc">Manages interactive customer channels, automated lead routing, and contextual inquiry response.</p>
+            <div class="rc-tags"><span>Lead Routing</span><span>Inquiry Response</span></div>
+            <div class="rc-action">Explore Capabilities →</div>
+          </div>
+
+          <!-- 5. Strategize Root Card -->
+          <div class="root-card card-indigo" style="top: 660px; left: 20px;" onclick="openSidePanel('strategize')">
+            <div class="rc-badge indigo">🔮 STRATEGIZE ROOT</div>
+            <h3 class="rc-title">Predictive Growth &amp; Planning</h3>
+            <p class="rc-desc">Simulates marketing positioning strategies, projects ROI, and aligns cross-agent campaign roadmaps.</p>
+            <div class="rc-tags"><span>ROI Simulation</span><span>Market Positioning</span></div>
+            <div class="rc-action">Explore Capabilities →</div>
+          </div>
+
+          <!-- 6. Automate Root Card -->
+          <div class="root-card card-emerald" style="top: 660px; right: 20px;" onclick="openSidePanel('automate')">
+            <div class="rc-badge emerald">🍏 AUTOMATE ROOT</div>
+            <h3 class="rc-title">Workflow Orchestration &amp; Triggers</h3>
+            <p class="rc-desc">Executes background cron schedules, automated pipeline triggers, and seamless cross-tool integrations.</p>
+            <div class="rc-tags"><span>Pipeline Sync</span><span>Cron Triggers</span></div>
+            <div class="rc-action">Explore Capabilities →</div>
+          </div>
+
+          <!-- 7. Monitor Root Card (deepest center) -->
+          <div class="root-card card-mint" style="top: 900px; left: 50%; transform: translateX(-50%); width: 400px;" onclick="openSidePanel('compliance')">
+            <div class="rc-badge mint">🛡️ MONITOR ROOT</div>
+            <h3 class="rc-title">Compliance &amp; SQLite Governance Gate</h3>
+            <p class="rc-desc">Runs 4-lens policy audits (MAS compliance, brand tone, fraud detection) with instant SQLite audit logging.</p>
+            <div class="rc-tags"><span>4-Lens Audit</span><span>SQLite Log</span><span>MAS Policy</span></div>
+            <div class="rc-action">Click to View Governance Gate →</div>
+          </div>
+
+        </div><!-- /prl-cards -->
+
+      </div><!-- /underground-canvas-stage -->
+    </section>
+
+
+    <!-- Agent Side Panel (Slide-in card when apple is clicked) -->
+    <div class="agent-side-panel" id="agent-side-panel" data-state="hidden">
+      <div class="panel-inner" id="panel-inner">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-bar">
+      <span>AI AGENTS FOR A BRIGHTER TOMORROW</span>
+      <span>BUILD &nbsp;+&nbsp; EXPLORE &nbsp;+&nbsp; GROW</span>
+    </div>
+  </div>
+
+  <!-- ── AGENTS PAGE ────────────────────────────────── -->
+  <div id="page-agents" class="page">
+    <nav class="cortex-nav inner-nav">
+      <div class="nav-brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8fba4e" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span class="nav-title">CORTEX</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#" class="nav-link" data-page="home">Home</a></li>
+        <li><a href="#" class="nav-link active" data-page="agents">Agents</a></li>
+        <li><a href="#" class="nav-link" data-page="insights">Insights</a></li>
+        <li><a href="#" class="nav-link" data-page="settings">Settings</a></li>
+      </ul>
+      <div class="nav-right"><div class="profile-avatar">J</div></div>
+    </nav>
+    <div class="inner-page-content">
+      <h1 class="inner-page-title">AI Agents</h1>
+      <p class="inner-page-desc">Access the full suite of 7 JA Assure intelligence agents.</p>
+      <div class="agents-grid" id="agents-grid"></div>
+    </div>
+  </div>
+
+  <!-- ── INSIGHTS PAGE ──────────────────────────────── -->
+  <div id="page-insights" class="page">
+    <nav class="cortex-nav inner-nav">
+      <div class="nav-brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8fba4e" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span class="nav-title">CORTEX</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#" class="nav-link" data-page="home">Home</a></li>
+        <li><a href="#" class="nav-link" data-page="agents">Agents</a></li>
+        <li><a href="#" class="nav-link active" data-page="insights">Insights</a></li>
+        <li><a href="#" class="nav-link" data-page="settings">Settings</a></li>
+      </ul>
+      <div class="nav-right"><div class="profile-avatar">J</div></div>
+    </nav>
+    <div class="inner-page-content">
+      <h1 class="inner-page-title">Market Insights</h1>
+      <p class="inner-page-desc">Aggregated intelligence across all automated research runs.</p>
+      <div class="controls-row">
+        <select id="insights-filter" class="ctrl-select">
+          <option value="all">All Intelligence</option>
+          <option value="market_research">Market Research</option>
+          <option value="competitor_monitoring">Competitor Analysis</option>
+          <option value="trend_research">Trend Discovery</option>
+        </select>
+        <button class="ctrl-btn" id="insights-load-btn">Load Latest Data</button>
+      </div>
+      <div id="insights-container" class="insights-container">
+        <div class="empty-state"><div class="empty-icon">📊</div><h3>Intelligence Dashboard</h3><p>Click "Load Latest Data" to aggregate findings.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SETTINGS PAGE ──────────────────────────────── -->
+  <div id="page-settings" class="page">
+    <nav class="cortex-nav inner-nav">
+      <div class="nav-brand">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8fba4e" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span class="nav-title">CORTEX</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#" class="nav-link" data-page="home">Home</a></li>
+        <li><a href="#" class="nav-link" data-page="agents">Agents</a></li>
+        <li><a href="#" class="nav-link" data-page="insights">Insights</a></li>
+        <li><a href="#" class="nav-link active" data-page="settings">Settings</a></li>
+      </ul>
+      <div class="nav-right"><div class="profile-avatar">J</div></div>
+    </nav>
+    <div class="inner-page-content">
+      <h1 class="inner-page-title">Settings</h1>
+      <div class="settings-grid">
+        <div class="glass-card">
+          <h3 class="card-title">API Connections</h3>
+          <div class="form-group"><label>Research Agent Engine</label><input type="url" id="s-research-url" placeholder="http://localhost:8000"></div>
+          <div class="form-group"><label>CORTEX Unified Gateway</label><input type="url" id="s-gateway-url" placeholder="http://localhost:8001"></div>
+          <div class="form-group"><label>Content Agent (Direct)</label><input type="url" id="s-content-url" placeholder="http://localhost:8002"></div>
+          <button class="save-btn" id="settings-save-btn">Save Configuration</button>
+        </div>
+        <div class="glass-card">
+          <h3 class="card-title">System Status</h3>
+          <div class="health-checks">
+            <div class="health-row"><span>Research Agent (Port 8000)</span><span id="check-research" class="check-status">Checking...</span></div>
+            <div class="health-row"><span>Compliance Gate (SQLite)</span><span id="check-compliance" class="check-status">Checking...</span></div>
+            <div class="health-row"><span>CORTEX Router (Port 8001)</span><span id="check-gateway" class="check-status">Checking...</span></div>
+            <div class="health-row"><span>Content Agent (Port 8002)</span><span id="check-content" class="check-status">Checking...</span></div>
+          </div>
+          <button class="save-btn outline" id="health-check-btn" style="margin-top:20px;width:100%">Refresh Health</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WORKSPACE MODALS ───────────────────────────── -->
+
+  <!-- Research Workspace -->
+  <div class="ws-overlay" id="ws-research" data-state="hidden">
+    <div class="ws-modal">
+      <div class="ws-modal-header">
+        <div class="ws-title-row">
+          <span class="ws-icon-emoji">🍎</span>
+          <h2>Discover Agent</h2>
+          <span class="ws-badge live">● LIVE</span>
+        </div>
+        <button class="ws-close" onclick="closeWorkspace('ws-research')">✕</button>
+      </div>
+      <div class="ws-modal-body">
+        <div class="ws-form">
+          <div class="form-group"><label>Brand / Client Name</label><input type="text" id="r-brand" placeholder="e.g. JA Assure"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Target Market</label>
+              <select id="r-market">
+                <option value="Singapore">Singapore</option>
+                <option value="Malaysia">Malaysia</option>
+                <option value="Hong Kong">Hong Kong</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Thailand">Thailand</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Research Type</label>
+              <select id="r-type">
+                <option value="competitor_monitoring">Competitor Monitoring</option>
+                <option value="market_research">Market Research</option>
+                <option value="trend_research">Trend Research</option>
+                <option value="campaign_research">Campaign Research</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group"><label>Objective <span class="label-opt">(optional)</span></label><input type="text" id="r-objective" placeholder="e.g. Discover SME insurance expansion signals"></div>
+          <button class="run-btn" id="research-run-btn">▶ Run Discovery Session</button>
+        </div>
+        <div id="research-results" class="ws-results hidden"></div>
+        <div class="ws-section-title">Recent Intelligence Runs</div>
+        <div id="research-history" class="history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compliance Workspace -->
+  <div class="ws-overlay" id="ws-compliance" data-state="hidden">
+    <div class="ws-modal">
+      <div class="ws-modal-header">
+        <div class="ws-title-row">
+          <span class="ws-icon-emoji">🛡️</span>
+          <h2>Monitor Agent</h2>
+          <span class="ws-badge live">● LIVE</span>
+        </div>
+        <button class="ws-close" onclick="closeWorkspace('ws-compliance')">✕</button>
+      </div>
+      <div class="ws-modal-body">
+        <div class="ws-form">
+          <div class="form-group"><label>Marketing Copy / Content to Evaluate</label><textarea id="c-content" rows="6" placeholder="Paste your marketing copy or campaign article here..."></textarea></div>
+          <div class="form-row">
+            <div class="form-group"><label>Content Format</label>
+              <select id="c-type">
+                <option value="social_post">Social Post</option>
+                <option value="blog_article">Blog Article</option>
+                <option value="ad_copy">Ad Copy</option>
+                <option value="email_newsletter">Email Newsletter</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Channel</label>
+              <select id="c-platform">
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Twitter">Twitter/X</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Jurisdiction</label>
+              <select id="c-region">
+                <option value="SG">Singapore (SG MAS)</option>
+                <option value="MY">Malaysia (MY BNM)</option>
+                <option value="GLOBAL">Global Standards</option>
+              </select>
+            </div>
+          </div>
+          <button class="run-btn compliance-run-btn" id="compliance-run-btn">🛡️ Evaluate Compliance Gate</button>
+        </div>
+        <div id="compliance-results" class="ws-results hidden"></div>
+        <div class="ws-section-title">Recent Compliance Audits</div>
+        <div id="compliance-history" class="history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Workspace -->
+  <div class="ws-overlay" id="ws-content" data-state="hidden">
+    <div class="ws-modal" style="max-width:780px">
+      <div class="ws-modal-header">
+        <div class="ws-title-row">
+          <span class="ws-icon-emoji">🍊</span>
+          <h2>Create Agent — Content Studio</h2>
+          <span class="ws-badge live">● LIVE</span>
+        </div>
+        <button class="ws-close" onclick="closeWorkspace('ws-content')">✕</button>
+      </div>
+      <div class="ws-modal-body">
+        <div class="ws-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Research Topic <span class="label-opt">(required)</span></label>
+              <input type="text" id="ct-topic" placeholder="e.g. Insurance awareness among young professionals">
+            </div>
+            <div class="form-group">
+              <label>Product / Offering</label>
+              <input type="text" id="ct-product" placeholder="e.g. Term Insurance" value="Term Insurance">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Key Research Finding <span class="label-opt">(required)</span></label>
+            <textarea id="ct-finding" rows="3" placeholder="e.g. Young professionals often delay insurance decisions due to perceived complexity and cost."></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Target Audience</label>
+              <input type="text" id="ct-audience" placeholder="e.g. Young Professionals" value="Young Professionals">
+            </div>
+            <div class="form-group">
+              <label>Campaign Goal</label>
+              <select id="ct-goal">
+                <option value="Lead Generation">Lead Generation</option>
+                <option value="Brand Awareness">Brand Awareness</option>
+                <option value="Education">Education / Awareness</option>
+                <option value="Conversion">Conversion</option>
+                <option value="Retention">Retention</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tone</label>
+              <select id="ct-tone">
+                <option value="Professional but human">Professional but human</option>
+                <option value="Conversational">Conversational</option>
+                <option value="Authoritative">Authoritative</option>
+                <option value="Empathetic">Empathetic</option>
+                <option value="Bold">Bold &amp; Direct</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Target Platforms</label>
+            <div class="platform-checkboxes">
+              <label class="cb-label"><input type="checkbox" class="platform-checkbox" value="LinkedIn" checked> <svg width="15" height="15" viewBox="0 0 24 24" fill="#0077b5" style="vertical-align:middle"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg> LinkedIn</label>
+              <label class="cb-label"><input type="checkbox" class="platform-checkbox" value="Instagram" checked> <svg width="15" height="15" viewBox="0 0 24 24" fill="#e1306c" style="vertical-align:middle"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> Instagram</label>
+              <label class="cb-label"><input type="checkbox" class="platform-checkbox" value="X" checked> <svg width="15" height="15" viewBox="0 0 24 24" fill="#ffffff" style="vertical-align:middle"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X (Twitter)</label>
+            </div>
+          </div>
+          <button class="run-btn" id="content-generate-btn" style="background:linear-gradient(135deg,#f59e0b,#d97706)">🍊 Generate Campaign Content</button>
+        </div>
+        <div id="content-results" class="ws-results hidden"></div>
+        <div class="ws-section-title">Recent Content Generations</div>
+        <div id="content-history" class="history-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Loader -->
+  <div class="global-loader" id="global-loader" style="display:none">
+    <div class="loader-spinner"></div>
+    <p id="loader-msg">Processing request...</p>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Application Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/environment.js"></script>
+  <script src="js/cortex-app.js"></script>
+</body>
+</html>

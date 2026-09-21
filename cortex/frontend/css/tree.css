@@ -1,0 +1,245 @@
+/* =====================================================
+   CORTEX — Tree & Apple Animations
+   ===================================================== */
+
+/* ── Tree Stage ──────────────────────────────────────── */
+
+.tree-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 60px; /* nav height */
+}
+
+.cortex-tree {
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - 60px);
+  object-fit: contain;
+  cursor: default;
+  user-select: none;
+}
+
+/* ── Canopy Sway ─────────────────────────────────────── */
+
+.tree-canopy {
+  transform-origin: 450px 600px;
+  animation: canopy-sway 12s ease-in-out infinite;
+}
+
+@keyframes canopy-sway {
+  0%, 100% { transform: rotate(0deg); }
+  25%       { transform: rotate(0.5deg); }
+  75%       { transform: rotate(-0.5deg); }
+}
+
+.tree-branches {
+  transform-origin: 450px 600px;
+  animation: branches-sway 14s ease-in-out infinite;
+  animation-delay: -3s;
+}
+
+@keyframes branches-sway {
+  0%, 100% { transform: rotate(0deg); }
+  33%       { transform: rotate(0.35deg); }
+  66%       { transform: rotate(-0.35deg); }
+}
+
+/* ── Apple Interaction ───────────────────────────────── */
+
+.apple-group {
+  cursor: pointer;
+}
+
+.apple-body {
+  transform-origin: center;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+}
+
+.apple-group:hover .apple-body {
+  transform: scale(1.15);
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.6));
+}
+
+.apple-group:hover .apple-glow {
+  opacity: 1 !important;
+  animation: apple-glow-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes apple-glow-pulse {
+  0%, 100% { opacity: 0.6; r: 32; }
+  50%       { opacity: 1; r: 40; }
+}
+
+.apple-group:hover .apple-label {
+  opacity: 1 !important;
+  animation: label-appear 0.3s ease;
+}
+
+@keyframes label-appear {
+  from { opacity: 0; transform: translate(0, 5px); }
+  to   { opacity: 1; transform: translate(0, 0); }
+}
+
+/* Apple float animation */
+.apple-group:nth-child(1) .apple-body {
+  animation: apple-float-1 6s ease-in-out infinite;
+}
+.apple-group:nth-child(2) .apple-body {
+  animation: apple-float-2 7s ease-in-out infinite;
+  animation-delay: -2s;
+}
+.apple-group:nth-child(3) .apple-body {
+  animation: apple-float-3 5.5s ease-in-out infinite;
+  animation-delay: -4s;
+}
+
+@keyframes apple-float-1 {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-5px); }
+}
+
+@keyframes apple-float-2 {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-4px); }
+}
+
+@keyframes apple-float-3 {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+/* Override floats to combine with hover scale */
+.apple-group:hover .apple-body {
+  animation: none !important;
+  transform: scale(1.15);
+}
+
+/* Apple status dots */
+.apple-status-dot {
+  animation: pulse-apple-status 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-apple-status {
+  0%, 100% { opacity: 1; r: 5; }
+  50%       { opacity: 0.6; r: 4; }
+}
+
+.apple-status-dot.live {
+  filter: drop-shadow(0 0 4px #4ade80);
+}
+
+/* Click ripple */
+.apple-group.clicked .apple-body {
+  animation: apple-click 0.2s ease !important;
+}
+
+@keyframes apple-click {
+  0%   { transform: scale(1.15); }
+  50%  { transform: scale(0.95); }
+  100% { transform: scale(1.1); }
+}
+
+/* ── Workflow Flow Dash Anim ─────────────────────────── */
+
+.workflow-flow path {
+  stroke-dashoffset: 100;
+  animation: dash-flow 3s linear infinite;
+}
+
+.workflow-flow path:nth-child(2) {
+  animation-delay: -1.5s;
+}
+
+@keyframes dash-flow {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── Feedback Loop Anim ──────────────────────────────── */
+
+.feedback-loop path {
+  stroke-dashoffset: 500;
+  animation: feedback-flow 8s linear infinite;
+}
+
+@keyframes feedback-flow {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── Leaves ──────────────────────────────────────────── */
+
+.tree-leaf {
+  transform-origin: center;
+  animation: leaf-sway var(--leaf-duration, 8s) ease-in-out infinite;
+  animation-delay: var(--leaf-delay, 0s);
+}
+
+@keyframes leaf-sway {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  33%       { transform: rotate(5deg) scale(1.03); }
+  66%       { transform: rotate(-5deg) scale(0.98); }
+}
+
+/* ── Workflow Bar ────────────────────────────────────── */
+
+.workflow-bar {
+  position: absolute;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 10px 20px;
+  background: rgba(5, 10, 3, 0.75);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  white-space: nowrap;
+}
+
+.workflow-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius-pill);
+  transition: all 0.3s ease;
+  opacity: 0.45;
+}
+
+.workflow-step.active {
+  opacity: 1;
+  background: rgba(200,168,112,0.08);
+}
+
+.wf-icon { font-size: 13px; }
+.wf-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-secondary); }
+.workflow-step.active .wf-label { color: var(--color-gold); }
+.workflow-arrow { font-size: 10px; color: rgba(255,255,255,0.15); }
+
+/* ── Night Apple Glow ────────────────────────────────── */
+
+body.env-night .apple-status-dot.live {
+  filter: drop-shadow(0 0 8px #4ade80);
+  animation: glow-pulse-night 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse-night {
+  0%, 100% { filter: drop-shadow(0 0 6px #4ade80); }
+  50%       { filter: drop-shadow(0 0 16px #4ade80); }
+}
+
+body.env-night #apple-research .apple-body {
+  filter: drop-shadow(0 0 12px rgba(232,56,10,0.5)) drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+}
+body.env-night #apple-compliance .apple-body {
+  filter: drop-shadow(0 0 12px rgba(42,154,88,0.4)) drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+}
+body.env-night #apple-content .apple-body {
+  filter: drop-shadow(0 0 10px rgba(240,165,0,0.3)) drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+}
