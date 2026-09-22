@@ -25,12 +25,15 @@ const AGENTS = {
   analyze: {
     icon: '🍎',
     name: 'Analyze Agent',
-    status: 'soon',
-    desc: 'Deep-dive analysis across research data, surfacing patterns and strategic signals from market intelligence.',
-    caps: ['Pattern Recognition', 'Trend Correlation', 'Data Synthesis'],
-    activities: [],
-    workspace: null,
-    btnLabel: 'Coming Soon',
+    status: 'live',
+    desc: 'Deep-dive analysis across research data — surfaces key patterns, market signals, anomalies, and strategic implications powered by Groq AI.',
+    caps: ['Pattern Recognition', 'Trend Correlation', 'Signal Detection', 'Anomaly Analysis'],
+    activities: [
+      { dot: '#a78bfa', text: 'Detected digital adoption surge pattern', time: '1h ago' },
+      { dot: '#a78bfa', text: 'Identified trust gap vs competitors', time: '3h ago' },
+    ],
+    workspace: 'ws-analyze',
+    btnLabel: '🔬 Open Analyze Workspace',
   },
   content: {
     icon: '🍎',
@@ -49,22 +52,27 @@ const AGENTS = {
   engage: {
     icon: '🍎',
     name: 'Engage Agent',
-    status: 'soon',
-    desc: 'Schedule, publish and track content engagement across channels with performance analytics.',
-    caps: ['Scheduling', 'Publishing', 'Analytics', 'A/B Testing'],
-    activities: [],
-    workspace: null,
-    btnLabel: 'Coming Soon',
+    status: 'live',
+    desc: 'Generate a 2-week AI-powered publishing calendar with optimal posting times, content types, hashtag strategies, and engagement tactics across all platforms.',
+    caps: ['Publishing Calendar', 'Engagement Tactics', 'Hashtag Strategy', 'KPI Targets'],
+    activities: [
+      { dot: '#38bdf8', text: 'Generated 2-week LinkedIn calendar for JA Assure', time: '30m ago' },
+      { dot: '#38bdf8', text: 'Scheduled Instagram reel strategy', time: '2h ago' },
+    ],
+    workspace: 'ws-engage',
+    btnLabel: '📅 Open Engage Calendar',
   },
   strategize: {
     icon: '🍎',
     name: 'Strategize Agent',
-    status: 'soon',
-    desc: 'Build strategic roadmaps from research intelligence, combining market and competitive signals.',
-    caps: ['SWOT Analysis', 'Roadmaps', 'Opportunity Mapping'],
-    activities: [],
-    workspace: null,
-    btnLabel: 'Coming Soon',
+    status: 'live',
+    desc: 'Build AI-generated strategic roadmaps from market intelligence — pillars, phased plans, KPIs, ROI projections, and risk mitigation strategies.',
+    caps: ['Strategic Roadmap', 'KPI Framework', 'ROI Projection', 'Risk Planning'],
+    activities: [
+      { dot: '#818cf8', text: 'Built Q1 2025 roadmap for Market Growth', time: '1h ago' },
+    ],
+    workspace: 'ws-strategize',
+    btnLabel: '📐 Open Strategy Builder',
   },
   automate: {
     icon: '🍎',
@@ -190,9 +198,9 @@ function openWorkspace(id) {
   const ws = document.getElementById(id);
   if (ws) {
     ws.dataset.state = 'visible';
-    if (id === 'ws-research') loadResearchHistory();
+    if (id === 'ws-research')   loadResearchHistory();
     if (id === 'ws-compliance') loadComplianceHistory();
-    if (id === 'ws-content') loadContentHistory();
+    if (id === 'ws-content')    loadContentHistory();
   }
 }
 
@@ -681,6 +689,332 @@ document.getElementById('content-generate-btn')?.addEventListener('click', async
   renderContentResults(data, product, platforms);
   showToast('Campaign content generated!', 'success');
   loadContentHistory();
+});
+
+// ── Analyze Agent Workspace Logic ─────────────────────── //
+document.getElementById('analyze-run-btn')?.addEventListener('click', async () => {
+  const brand   = document.getElementById('an-brand')?.value?.trim() || 'JA Assure';
+  const market  = document.getElementById('an-market')?.value;
+  const rtype   = document.getElementById('an-type')?.value;
+  const focus   = document.getElementById('an-focus')?.value?.trim();
+  const rawText = document.getElementById('an-findings')?.value?.trim();
+
+  // Parse pasted findings into objects if provided
+  let findings = [];
+  if (rawText) {
+    findings = rawText.split('\n').filter(l => l.trim()).map((l, i) => ({
+      finding_type: 'insight',
+      title: `Finding ${i + 1}`,
+      summary: l.replace(/^[-*•]\s*/, '').trim()
+    }));
+  } else {
+    // Try to auto-pull from recent research runs
+    try {
+      const r = await fetch(`${GATEWAY}/research/status`);
+      const statuses = await r.json();
+      for (const s of statuses.slice(0, 3)) {
+        if (s.latest_run_id && s.status === 'COMPLETED') {
+          const rr = await fetch(`${GATEWAY}/research/${s.latest_run_id}`);
+          const run = await rr.json();
+          findings = [...findings, ...(run.findings || []).slice(0, 4)];
+          if (findings.length >= 6) break;
+        }
+      }
+    } catch {}
+  }
+
+  showLoader('Running pattern analysis with Groq AI...');
+  const resultsEl = document.getElementById('analyze-results');
+  resultsEl.classList.add('hidden');
+
+  try {
+    const resp = await fetch(`${GATEWAY}/analyze/run`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brand, market, research_type: rtype, focus, findings }),
+    });
+    const data = await resp.json();
+    hideLoader();
+
+    if (!data.success) { showToast(data.detail || 'Analysis failed.', 'error'); return; }
+    const d = data.data;
+
+    const strengthColor = s => s === 'high' ? '#4ade80' : s === 'medium' ? '#fbbf24' : '#94a3b8';
+    const dirColor = dir => dir === 'bullish' ? '#4ade80' : dir === 'bearish' ? '#ff4d4d' : '#fbbf24';
+    const dirIcon = dir => dir === 'bullish' ? '▲' : dir === 'bearish' ? '▼' : '◆';
+
+    resultsEl.innerHTML = `
+      <div style="display:flex;gap:12px;margin-bottom:20px">
+        <div style="flex:1;padding:16px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:14px;text-align:center">
+          <div style="font-size:28px;font-weight:700;color:#4ade80">${d.opportunity_score}<span style="font-size:14px;color:rgba(255,255,255,0.5)">/100</span></div>
+          <div style="font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.5);margin-top:4px">OPPORTUNITY SCORE</div>
+        </div>
+        <div style="flex:1;padding:16px;background:rgba(255,77,77,0.08);border:1px solid rgba(255,77,77,0.2);border-radius:14px;text-align:center">
+          <div style="font-size:28px;font-weight:700;color:#ff4d4d">${d.risk_score}<span style="font-size:14px;color:rgba(255,255,255,0.5)">/100</span></div>
+          <div style="font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.5);margin-top:4px">RISK SCORE</div>
+        </div>
+      </div>
+      <div style="padding:16px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);border-radius:14px;margin-bottom:20px">
+        <div style="font-size:10px;letter-spacing:2px;color:#a78bfa;margin-bottom:8px">ANALYST VERDICT</div>
+        <div style="font-size:14px;color:#fff;font-style:italic">&ldquo;${esc(d.analyst_verdict)}&rdquo;</div>
+      </div>
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">EXECUTIVE SUMMARY</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.6;margin-bottom:20px">${esc(d.analysis_summary)}</div>
+
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">KEY PATTERNS</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+        ${(d.key_patterns || []).map(p => `
+          <div style="padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <div style="font-size:14px;font-weight:600;color:#fff">${esc(p.pattern)}</div>
+              <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.06);color:${strengthColor(p.strength)}">${(p.strength||'').toUpperCase()}</span>
+            </div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:6px">${esc(p.description)}</div>
+            <div style="font-size:11px;color:#a78bfa">→ ${esc(p.implication)}</div>
+          </div>`).join('')}
+      </div>
+
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">MARKET SIGNALS</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+        ${(d.market_signals || []).map(s => `
+          <div style="padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px">
+            <div style="font-size:12px;font-weight:600;color:#fff;margin-bottom:4px">
+              <span style="color:${dirColor(s.direction)}">${dirIcon(s.direction)} </span>${esc(s.signal)}
+            </div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:6px">${esc(s.rationale)}</div>
+            <div style="height:3px;background:rgba(255,255,255,0.08);border-radius:2px">
+              <div style="height:100%;width:${s.confidence||0}%;background:${dirColor(s.direction)};border-radius:2px"></div>
+            </div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px">Confidence: ${s.confidence}%</div>
+          </div>`).join('')}
+      </div>
+
+      ${(d.anomalies || []).length ? `
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">ANOMALIES DETECTED</div>
+      ${d.anomalies.map(a => `
+        <div style="padding:14px;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.25);border-radius:12px;margin-bottom:10px">
+          <div style="font-size:12px;font-weight:600;color:#fbbf24;margin-bottom:4px">⚠ ${esc(a.anomaly)}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6)">→ ${esc(a.action)}</div>
+        </div>`).join('')}` : ''}
+    `;
+    resultsEl.classList.remove('hidden');
+    showToast('Pattern analysis complete.', 'success');
+  } catch (e) {
+    hideLoader();
+    showToast('Analyze Agent failed. Check backend on port 8001.', 'error');
+  }
+});
+
+// ── Strategize Agent Workspace Logic ──────────────────── //
+document.getElementById('strategize-run-btn')?.addEventListener('click', async () => {
+  const brand    = document.getElementById('st-brand')?.value?.trim() || 'JA Assure';
+  const market   = document.getElementById('st-market')?.value;
+  const goal     = document.getElementById('st-goal')?.value;
+  const timeframe= document.getElementById('st-timeframe')?.value;
+  const budget   = document.getElementById('st-budget')?.value;
+  const summary  = document.getElementById('st-summary')?.value?.trim();
+
+  showLoader('Building strategic roadmap with Groq AI...');
+  const resultsEl = document.getElementById('strategize-results');
+  resultsEl.classList.add('hidden');
+
+  try {
+    const resp = await fetch(`${GATEWAY}/strategize/run`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brand, market, goal, timeframe, budget_tier: budget, analysis_summary: summary }),
+    });
+    const data = await resp.json();
+    hideLoader();
+
+    if (!data.success) { showToast(data.detail || 'Strategy build failed.', 'error'); return; }
+    const d = data.data;
+
+    const priorityColors = { P1: '#4ade80', P2: '#fbbf24', P3: '#94a3b8' };
+    const riskColor = l => l === 'high' ? '#ff4d4d' : l === 'medium' ? '#fbbf24' : '#4ade80';
+
+    resultsEl.innerHTML = `
+      <div style="padding:20px;background:rgba(79,70,229,0.08);border:1px solid rgba(79,70,229,0.3);border-radius:16px;margin-bottom:20px">
+        <div style="font-size:20px;font-weight:600;color:#fff;margin-bottom:6px">${esc(d.strategy_title)}</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6">${esc(d.executive_brief)}</div>
+        <div style="margin-top:12px;display:flex;gap:16px">
+          <div style="font-size:12px;color:rgba(255,255,255,0.4)">Confidence: <span style="color:#818cf8;font-weight:600">${d.confidence_score}%</span></div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4)">ROI Base: <span style="color:#4ade80;font-weight:600">${esc(d.roi_projection?.base || '')}</span></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">STRATEGIC PILLARS</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+        ${(d.strategic_pillars || []).map(p => `
+          <div style="padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-left:3px solid ${priorityColors[p.priority]||'#818cf8'};border-radius:12px;display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:3px">${esc(p.pillar)}</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.55)">${esc(p.description)}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;margin-left:12px">
+              <div style="font-size:10px;color:${priorityColors[p.priority]||'#818cf8'};font-weight:700">${p.priority}</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px">${esc(p.owner)}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">ROADMAP PHASES</div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px">
+        ${(d.roadmap_phases || []).map((phase, i) => `
+          <div style="padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <div style="font-size:13px;font-weight:600;color:#818cf8">${esc(phase.phase)}</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.05);padding:2px 10px;border-radius:10px">${esc(phase.duration)}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">
+              ${(phase.key_actions || []).map(a => `<div style="font-size:12px;color:rgba(255,255,255,0.65)">✓ ${esc(a)}</div>`).join('')}
+            </div>
+            <div style="font-size:11px;color:#4ade80">🏁 ${esc(phase.milestone)}</div>
+          </div>`).join('')}
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+        <div>
+          <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">KPI TARGETS</div>
+          ${(d.kpis || []).map(k => `
+            <div style="padding:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;margin-bottom:8px">
+              <div style="font-size:12px;font-weight:600;color:#fff;margin-bottom:2px">${esc(k.metric)}</div>
+              <div style="font-size:13px;color:#4ade80;font-weight:600">${esc(k.target)}</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.35)">Baseline: ${esc(k.baseline)}</div>
+            </div>`).join('')}
+        </div>
+        <div>
+          <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">ROI PROJECTIONS</div>
+          <div style="padding:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;margin-bottom:8px">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div><div style="font-size:10px;color:rgba(255,255,255,0.4)">Conservative</div><div style="font-size:14px;color:#94a3b8;font-weight:600">${esc(d.roi_projection?.conservative)}</div></div>
+              <div><div style="font-size:10px;color:rgba(255,255,255,0.4)">Base Case</div><div style="font-size:14px;color:#4ade80;font-weight:600">${esc(d.roi_projection?.base)}</div></div>
+              <div><div style="font-size:10px;color:rgba(255,255,255,0.4)">Optimistic</div><div style="font-size:14px;color:#fbbf24;font-weight:600">${esc(d.roi_projection?.optimistic)}</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      ${(d.risks || []).length ? `
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">RISK REGISTER</div>
+      ${d.risks.map(r => `
+        <div style="padding:14px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:12px;margin-bottom:8px">
+          <div style="font-size:12px;font-weight:600;color:#f87171;margin-bottom:4px">${esc(r.risk)}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:4px">Likelihood: <span style="color:${riskColor(r.likelihood)}">${r.likelihood}</span> · Impact: <span style="color:${riskColor(r.impact)}">${r.impact}</span></div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6)">Mitigation: ${esc(r.mitigation)}</div>
+        </div>`).join('')}` : ''}
+    `;
+    resultsEl.classList.remove('hidden');
+    showToast('Strategic roadmap built!', 'success');
+  } catch (e) {
+    hideLoader();
+    showToast('Strategize Agent failed. Check backend on port 8001.', 'error');
+  }
+});
+
+// ── Engage Agent Workspace Logic ──────────────────────── //
+document.getElementById('engage-run-btn')?.addEventListener('click', async () => {
+  const brand   = document.getElementById('en-brand')?.value?.trim() || 'JA Assure';
+  const audience = document.getElementById('en-audience')?.value?.trim() || 'Young Professionals';
+  const freq    = document.getElementById('en-freq')?.value;
+  const theme   = document.getElementById('en-theme')?.value?.trim();
+  const themesRaw = document.getElementById('en-themes')?.value?.trim();
+  const platforms = Array.from(document.querySelectorAll('.en-platform-checkbox:checked')).map(c => c.value);
+  const content_themes = themesRaw ? themesRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+  if (!platforms.length) { showToast('Select at least one platform.', 'error'); return; }
+
+  showLoader('Generating engagement calendar with Groq AI...');
+  const resultsEl = document.getElementById('engage-results');
+  resultsEl.classList.add('hidden');
+
+  try {
+    const resp = await fetch(`${GATEWAY}/engage/schedule`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ brand, platforms, audience, frequency: freq, campaign_title: theme, content_themes }),
+    });
+    const data = await resp.json();
+    hideLoader();
+
+    if (!data.success) { showToast(data.detail || 'Engage Agent failed.', 'error'); return; }
+    const d = data.data;
+
+    const platformColor = p => ({ LinkedIn: '#0077b5', Instagram: '#e1306c', X: '#94a3b8' }[p] || '#fff');
+    const week1 = (d.posting_schedule || []).filter(s => s.week === 1);
+    const week2 = (d.posting_schedule || []).filter(s => s.week === 2);
+
+    const renderWeek = (posts) => posts.map(p => `
+      <div style="padding:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;display:flex;gap:12px;align-items:flex-start">
+        <div style="flex-shrink:0;text-align:center;min-width:52px">
+          <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.8)">${esc(p.day)}</div>
+          <div style="font-size:10px;color:${platformColor(p.platform)};margin-top:2px">${esc(p.platform)}</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:600;color:#fff;margin-bottom:2px">${esc(p.content_type)}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:4px">${esc(p.topic)}</div>
+          <div style="display:flex;gap:8px">
+            <span style="font-size:10px;color:rgba(255,255,255,0.35)">🕐 ${esc(p.best_time)}</span>
+            <span style="font-size:10px;color:#fbbf24">${esc(p.cta)}</span>
+          </div>
+        </div>
+      </div>`).join('');
+
+    resultsEl.innerHTML = `
+      <div style="padding:16px;background:rgba(3,105,161,0.1);border:1px solid rgba(3,105,161,0.3);border-radius:14px;margin-bottom:20px">
+        <div style="font-size:16px;font-weight:600;color:#fff;margin-bottom:6px">${esc(d.calendar_title)}</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.5">${esc(d.engagement_strategy)}</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+        ${[{label:'Impressions/Week', val:d.kpi_targets?.impression_goal, col:'#38bdf8'},{label:'Engagement Rate', val:d.kpi_targets?.engagement_rate, col:'#4ade80'},{label:'Click-Through', val:d.kpi_targets?.click_through, col:'#fbbf24'},{label:'Follower Growth', val:d.kpi_targets?.follower_growth, col:'#a78bfa'}].map(k =>
+          `<div style="padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;text-align:center">
+            <div style="font-size:18px;font-weight:700;color:${k.col}">${esc(k.val||'—')}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-top:4px;letter-spacing:1px">${k.label}</div>
+          </div>`).join('')}
+      </div>
+
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">WEEK 1 SCHEDULE</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">${renderWeek(week1)}</div>
+
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">WEEK 2 SCHEDULE</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">${renderWeek(week2)}</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+        <div>
+          <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">ENGAGEMENT TACTICS</div>
+          ${(d.engagement_tactics || []).map(t => `
+            <div style="padding:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;margin-bottom:8px">
+              <div style="font-size:12px;font-weight:600;color:#fff;margin-bottom:2px">${esc(t.tactic)} <span style="color:${platformColor(t.platform)};font-size:10px">(${t.platform})</span></div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.55)">${esc(t.description)}</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:3px">${esc(t.frequency)}</div>
+            </div>`).join('')}
+        </div>
+        <div>
+          <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">HASHTAG STRATEGY</div>
+          <div style="padding:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px">
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px">Primary</div>
+            <div style="font-size:12px;color:#fbbf24;margin-bottom:10px">${(d.hashtag_strategy?.primary||[]).join(' ')}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px">Secondary</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:10px">${(d.hashtag_strategy?.secondary||[]).join(' ')}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px">Trending</div>
+            <div style="font-size:12px;color:#38bdf8">${(d.hashtag_strategy?.trending||[]).join(' ')}</div>
+          </div>
+        </div>
+      </div>
+
+      ${(d.optimization_tips || []).length ? `
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">OPTIMIZATION TIPS</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${d.optimization_tips.map(t => `<div style="font-size:12px;color:rgba(255,255,255,0.65);padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:10px;border-left:2px solid #38bdf8">💡 ${esc(t)}</div>`).join('')}
+      </div>` : ''}
+    `;
+    resultsEl.classList.remove('hidden');
+    showToast('Engagement calendar generated!', 'success');
+  } catch (e) {
+    hideLoader();
+    showToast('Engage Agent failed. Check backend on port 8001.', 'error');
+  }
 });
 
 // ── Insights Page Logic ───────────────────────────────── //
