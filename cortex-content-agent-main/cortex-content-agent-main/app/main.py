@@ -4,10 +4,11 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from .config import APP_NAME, HOST, PORT, OUTPUT_DIR, MOCK_MODE
-from .models import CampaignRequest, VideoRequest
+from .config import APP_NAME, HOST, PORT, OUTPUT_DIR, MOCK_MODE, BFL_API_KEY, VIDEO_API_KEY
+from .models import CampaignRequest, VideoRequest, ImageRequest
 from .gemini_service import generate_content
 from .gemini_video_service import generate_video
+from .bfl_image_service import generate_bfl_image
 from .mock_service import mock_content
 
 
@@ -37,18 +38,24 @@ def root():
     return {
         "service": APP_NAME,
         "status": "running",
+        "bfl_image_generation": bool(BFL_API_KEY),
+        "video_generation": bool(VIDEO_API_KEY),
         "docs": "/docs"
     }
 
 
 @app.get("/health")
 def health():
-    from .config import GEMINI_API_KEY
+    from .config import GEMINI_API_KEY, BFL_API_KEY, VIDEO_API_KEY
 
     return {
         "status": "ok",
         "gemini_configured": bool(GEMINI_API_KEY),
-        "video_provider": "Gemini Veo",
+        "bfl_image_key_configured": bool(BFL_API_KEY),
+        "bfl_key": BFL_API_KEY[:8] + "..." if BFL_API_KEY else "none",
+        "video_key_configured": bool(VIDEO_API_KEY),
+        "video_key": VIDEO_API_KEY[:8] + "..." if VIDEO_API_KEY else "none",
+        "video_provider": "Wan-AI / Fal.ai / Video Engine",
         "mock_mode": MOCK_MODE,
     }
 
@@ -83,7 +90,33 @@ def create_content(request: CampaignRequest):
         ) from exc
 
 
+@app.post("/api/content/generate-image")
+@app.post("/content/generate-image")
+def create_image(request: ImageRequest):
+    try:
+        res = generate_bfl_image(
+            prompt=request.prompt,
+            width=request.width,
+            height=request.height,
+            model=request.model or "flux-pro-1.1"
+        )
+        return {
+            "success": True,
+            "agent": "content",
+            "provider": res.get("provider", "BFL FLUX"),
+            "image_url": res.get("image_url"),
+            "filename": res.get("filename"),
+            "prompt": request.prompt
+        }
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"BFL image generation failed: {exc}"
+        ) from exc
+
+
 @app.post("/api/content/generate-video")
+@app.post("/content/generate-video")
 def create_video(request: VideoRequest):
 
     try:
@@ -95,7 +128,7 @@ def create_video(request: VideoRequest):
         return {
             "success": True,
             "agent": "content",
-            "provider": "Gemini Veo",
+            "provider": "Wan-AI / Video Engine",
             "video_url": f"/outputs/{filename}",
             "filename": filename
         }
@@ -106,6 +139,7 @@ def create_video(request: VideoRequest):
             status_code=502,
             detail=f"Video generation failed: {exc}"
         ) from exc
+
 
 
 if __name__ == "__main__":

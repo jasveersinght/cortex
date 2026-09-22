@@ -125,11 +125,26 @@ const CORTEX_API = {
     });
   },
 
+  async generateImage({ prompt, width = 1024, height = 1024, model = 'flux-pro-1.1' }) {
+    return await this._fetch(`${this.gateway}/content/generate-image`, {
+      method: 'POST',
+      body: JSON.stringify({ prompt, width, height, model }),
+    });
+  },
+
+  async generateVideo({ prompt }) {
+    return await this._fetch(`${this.gateway}/content/generate-video`, {
+      method: 'POST',
+      body: JSON.stringify({ prompt }),
+    });
+  },
+
   async contentHealth() {
     return await this._fetch(`${this.gateway}/content/health`).catch(() =>
       this._fetch('http://localhost:8002/health')
     );
   },
+
 
   // ── Activity Feed ─────────────────────────────────── //
 

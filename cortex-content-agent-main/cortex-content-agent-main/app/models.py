@@ -25,3 +25,10 @@ class VideoRequest(BaseModel):
     seed: int | None = None
     num_frames: int | None = None
     num_inference_steps: int | None = None
+
+class ImageRequest(BaseModel):
+    prompt: str
+    width: int = 1024
+    height: int = 1024
+    model: str = "flux-pro-1.1"
+

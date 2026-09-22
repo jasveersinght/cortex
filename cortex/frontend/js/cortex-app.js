@@ -494,8 +494,11 @@ function renderContentResults(data, product, platforms) {
   const ab = d.ab_variants || [];
   const visual = d.visual || {};
 
-  // Platform tabs with crisp SVG logos
-  const platformKeys = ['linkedin', 'instagram', 'x'];
+  // Platform tabs with crisp SVG logos - include video tab dynamically
+  const allPlatforms = ['linkedin', 'instagram', 'x', 'video'];
+  const userSelected = (platforms || []).map(p => (p || '').toLowerCase());
+  const platformKeys = allPlatforms.filter(p => userSelected.includes(p) || (d && d[p] && Object.keys(d[p]).length > 0));
+  if (!platformKeys.length) platformKeys.push('linkedin', 'instagram', 'x', 'video');
   const platformSvgIcons = {
     linkedin: `<svg width="15" height="15" viewBox="0 0 24 24" fill="#0077b5" style="vertical-align:middle"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>`,
     instagram: `<svg width="15" height="15" viewBox="0 0 24 24" fill="#e1306c" style="vertical-align:middle"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`,
@@ -855,8 +858,8 @@ document.getElementById('content-generate-btn')?.addEventListener('click', async
 
   let resp, data;
   try {
-    // Try direct Content Agent on port 8002 first
-    resp = await fetch(`${contentDirectUrl}/api/content/generate`, {
+    // Call CORTEX Gateway on port 8001 (active Groq LLM Endpoint)
+    resp = await fetch(`${gatewayUrl}/content/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -864,8 +867,8 @@ document.getElementById('content-generate-btn')?.addEventListener('click', async
     data = await resp.json();
   } catch (e1) {
     try {
-      // Fallback to CORTEX Gateway on port 8001
-      resp = await fetch(`${gatewayUrl}/content/generate`, {
+      // Fallback to standalone Content Agent on port 8002
+      resp = await fetch(`${contentDirectUrl}/api/content/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -873,7 +876,7 @@ document.getElementById('content-generate-btn')?.addEventListener('click', async
       data = await resp.json();
     } catch (e2) {
       hideLoader();
-      showToast('Content Agent offline. Please start server on port 8002.', 'error');
+      showToast('Content Agent offline. Please check backend Gateway on port 8001.', 'error');
       return;
     }
   }
@@ -1429,7 +1432,79 @@ function createSoilParticles() {
   }
 }
 
+// ── Automate Agent Workspace Logic ────────────────────── //
+document.getElementById('automate-run-btn')?.addEventListener('click', async () => {
+  const name   = document.getElementById('au-name')?.value?.trim() || 'Cross-Agent Content Sync';
+  const freq   = document.getElementById('au-freq')?.value;
+  const action = document.getElementById('au-action')?.value?.trim() || 'Auto-Schedule & Distribution';
+
+  showLoader('Triggering automation pipeline...');
+  const resultsEl = document.getElementById('automate-results');
+  resultsEl.classList.add('hidden');
+
+  try {
+    const resp = await fetch(`${GATEWAY}/automate/run`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pipeline_name: name, frequency: freq, target_action: action }),
+    });
+    const data = await resp.json();
+    hideLoader();
+
+    if (!data.success) { showToast(data.detail || 'Automate Agent failed.', 'error'); return; }
+    const d = data.data;
+
+    resultsEl.innerHTML = `
+      <div style="padding:16px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:14px;margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div style="font-size:16px;font-weight:600;color:#fff">${esc(d.workflow_name)}</div>
+          <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(16,185,129,0.2);color:#34d399;font-weight:600">● ACTIVE PIPELINE</span>
+        </div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.5">${esc(d.orchestration_summary)}</div>
+        <div style="margin-top:10px;display:flex;gap:16px">
+          <div style="font-size:11px;color:rgba(255,255,255,0.4)">Efficiency Gain: <span style="color:#34d399;font-weight:600">${esc(d.efficiency_gain)}</span></div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4)">Time Saved: <span style="color:#fbbf24;font-weight:600">${esc(d.estimated_time_saved)}</span></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">PIPELINE ORCHESTRATION STEPS</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px">
+        ${(d.pipeline_steps || []).map(s => `
+          <div style="padding:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;display:flex;justify-content:space-between;align-items:center">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div style="width:24px;height:24px;border-radius:50%;background:rgba(52,211,153,0.15);color:#34d399;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">${s.step}</div>
+              <div>
+                <div style="font-size:12px;font-weight:600;color:#fff">${esc(s.agent)}</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.55)">${esc(s.action)}</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <span style="font-size:10px;color:#34d399;background:rgba(52,211,153,0.1);padding:2px 6px;border-radius:4px">✓ ${s.status}</span>
+              <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px">${s.latency}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+
+      <div style="margin-bottom:8px;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4)">AUTOMATION RULES</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${(d.automation_rules || []).map(r => `
+          <div style="padding:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px">
+            <div style="font-size:12px;font-weight:600;color:#fff;margin-bottom:2px">⚡ ${esc(r.rule)}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.5)">IF: ${esc(r.condition)}</div>
+            <div style="font-size:11px;color:#34d399;margin-top:2px">THEN: ${esc(r.action)}</div>
+          </div>`).join('')}
+      </div>
+    `;
+    resultsEl.classList.remove('hidden');
+    showToast('Automation pipeline active!', 'success');
+  } catch (e) {
+    hideLoader();
+    showToast('Automate Agent failed. Check backend on port 8001.', 'error');
+  }
+});
+
 // ── Init ──────────────────────────────────────────────── //
+
 document.addEventListener('DOMContentLoaded', () => {
   navigateTo('home');
   initEnvironmentEngine();
