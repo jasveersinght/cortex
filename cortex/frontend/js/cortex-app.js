@@ -502,60 +502,180 @@ function renderContentResults(data, product, platforms) {
     x: `<svg width="15" height="15" viewBox="0 0 24 24" fill="#ffffff" style="vertical-align:middle"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`
   };
   const platformNames = { linkedin: 'LinkedIn', instagram: 'Instagram', x: 'X (Twitter)' };
+
   const platformTabsHtml = platformKeys.map(p => `
-    <button class="platform-tab" data-platform="${p}" onclick="switchContentTab('${p}')">${platformSvgIcons[p]} <span>${platformNames[p]}</span></button>
+    <button class="platform-tab" data-platform="${p}" style="color: #ffffff; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: all 0.2s;" onclick="switchContentTab('${p}')">${platformSvgIcons[p]} <span style="font-weight: 500; font-size: 13px;">${platformNames[p]}</span></button>
   `).join('');
+
+  const bannerTitle = visual.headline || campaign.title || product;
 
   const platformContentHtml = platformKeys.map(p => {
     const pc = d[p] || {};
+    const title = pc.headline || bannerTitle;
+    const subtitle = pc.hook || visual.concept || messaging.hook || '';
+    const ctaText = pc.cta || visual.cta || 'Learn More →';
+
+    let imgUrl = '';
+    let cardMarkup = '';
+
+    if (p === 'instagram') {
+      // 1:1 Aspect Ratio (Instagram Square Post)
+      imgUrl = visual.image_url || `https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&h=800&q=80`;
+      cardMarkup = `
+        <div class="insta-mockup-card" style="width:100%;max-width:440px;margin:0 auto 20px auto;background:#0b1329;border:1px solid rgba(225,48,108,0.3);border-radius:18px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.6);">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(15,23,42,0.95);border-bottom:1px solid rgba(255,255,255,0.06);">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#e1306c,#f59e0b);padding:2px;display:flex;align-items:center;justify-content:center;">
+                <div style="width:100%;height:100%;border-radius:50%;background:#090d16;display:flex;align-items:center;justify-content:center;font-size:16px;">🍎</div>
+              </div>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:#ffffff;display:flex;align-items:center;gap:4px;">ja_assure_official <svg width="12" height="12" viewBox="0 0 24 24" fill="#38bdf8"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div style="font-size:10px;color:rgba(255,255,255,0.5);">Sponsored · Instagram Post (1:1)</div>
+              </div>
+            </div>
+            <div style="color:rgba(255,255,255,0.6);font-weight:bold;">•••</div>
+          </div>
+          <!-- 1:1 Aspect Ratio Canvas -->
+          <div style="position:relative;width:100%;aspect-ratio:1 / 1;overflow:hidden;background:linear-gradient(135deg,#1e1b4b,#0f172a);">
+            <img src="${imgUrl}" onerror="this.style.opacity='0';" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.65;filter:brightness(0.85);transition:opacity 0.3s;">
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.15) 0%,rgba(9,13,22,0.92) 100%);display:flex;flex-direction:column;justify-content:space-between;padding:24px;z-index:2;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="background:rgba(225,48,108,0.25);border:1px solid rgba(225,48,108,0.5);backdrop-filter:blur(8px);color:#fff;font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:20px;text-transform:uppercase;">INSTAGRAM 1:1 TEMPLATE</span>
+                <span style="font-size:11px;color:#fbbf24;font-weight:600;">✨ JA Assure AI</span>
+              </div>
+              <div>
+                <div style="font-family:'Cormorant Garamond',serif;font-size:25px;font-weight:700;color:#ffffff;line-height:1.2;text-shadow:0 2px 12px rgba(0,0,0,0.9);">${esc(title)}</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.9);margin-top:8px;text-shadow:0 1px 6px rgba(0,0,0,0.9);font-weight:400;">${esc(subtitle)}</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;color:#fbbf24;font-style:italic">Swipe for details 👉</span>
+                <button style="padding:7px 16px;border-radius:18px;background:linear-gradient(135deg,#e1306c,#f59e0b);color:#fff;font-size:11px;font-weight:700;border:none;box-shadow:0 4px 14px rgba(225,48,108,0.4);cursor:pointer">${esc(ctaText)}</button>
+              </div>
+            </div>
+          </div>
+          <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.06);">
+            <div style="display:flex;gap:16px;font-size:14px;color:#fff;"><span>❤️ 1.4K</span> <span>💬 84</span> <span>✈️ Share</span></div>
+            <span style="font-size:14px;">🔖</span>
+          </div>
+        </div>
+      `;
+    } else if (p === 'linkedin') {
+      // 1.91:1 Aspect Ratio (LinkedIn Document/Article Banner)
+      imgUrl = visual.image_url || `https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&h=627&q=80`;
+      cardMarkup = `
+        <div class="linkedin-mockup-card" style="width:100%;max-width:580px;margin:0 auto 20px auto;background:#0b1329;border:1px solid rgba(0,119,181,0.3);border-radius:14px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.6);">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(15,23,42,0.95);border-bottom:1px solid rgba(255,255,255,0.06);">
+            <div style="width:38px;height:38px;border-radius:6px;background:#0077b5;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:bold;color:#fff;">JA</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#ffffff;">JA Assure Insurance Group</div>
+              <div style="font-size:10px;color:rgba(255,255,255,0.5);">18,920 followers · Promoted · LinkedIn (1.91:1)</div>
+            </div>
+          </div>
+          <!-- LinkedIn Intro Hook snippet -->
+          <div style="padding:12px 16px;font-size:13px;color:#e2e8f0;line-height:1.5;background:rgba(15,23,42,0.6);border-bottom:1px solid rgba(255,255,255,0.04);">${esc(pc.hook || subtitle)}</div>
+          <!-- 1.91:1 Aspect Ratio Banner -->
+          <div style="position:relative;width:100%;aspect-ratio:1.91 / 1;overflow:hidden;background:linear-gradient(135deg,#0f172a,#1e293b);">
+            <img src="${imgUrl}" onerror="this.style.opacity='0';" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.65;filter:brightness(0.8);transition:opacity 0.3s;">
+            <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(9,13,22,0.95) 0%,rgba(9,13,22,0.45) 100%);padding:20px;display:flex;flex-direction:column;justify-content:space-between;z-index:2;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="background:rgba(0,119,181,0.3);border:1px solid rgba(0,119,181,0.6);color:#38bdf8;font-size:10px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:1px;">LINKEDIN 1.91:1 BANNER</span>
+              </div>
+              <div>
+                <div style="font-size:20px;font-weight:700;color:#ffffff;line-height:1.3;">${esc(title)}</div>
+              </div>
+              <div>
+                <button style="padding:6px 14px;border-radius:14px;background:#0077b5;color:#fff;font-size:11px;font-weight:600;border:none;cursor:pointer">${esc(ctaText)}</button>
+              </div>
+            </div>
+          </div>
+          <div style="padding:10px 16px;display:flex;justify-content:space-between;color:rgba(255,255,255,0.7);font-size:12px;border-top:1px solid rgba(255,255,255,0.06);">
+            <span>👍 💬 482 reactions</span>
+            <span>36 comments</span>
+          </div>
+        </div>
+      `;
+    } else {
+      // 16:9 Aspect Ratio (X / Twitter Card)
+      imgUrl = visual.image_url || `https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&h=675&q=80`;
+      cardMarkup = `
+        <div class="x-mockup-card" style="width:100%;max-width:560px;margin:0 auto 20px auto;background:#0b1329;border:1px solid rgba(255,255,255,0.2);border-radius:14px;overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.6);">
+          <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(15,23,42,0.95);border-bottom:1px solid rgba(255,255,255,0.06);">
+            <div style="width:34px;height:34px;border-radius:50%;background:#ffffff;color:#000;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:bold;">🍎</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#ffffff;display:flex;align-items:center;gap:4px;">JA Assure <span style="color:rgba(255,255,255,0.5);font-weight:400;">@JA_Assure · Promoted</span></div>
+            </div>
+          </div>
+          <!-- X Thread Hook Header Text -->
+          <div style="padding:12px 16px;font-size:13.5px;color:#f8fafc;line-height:1.5;background:rgba(15,23,42,0.6);border-bottom:1px solid rgba(255,255,255,0.04);">${esc(pc.hook || subtitle)}</div>
+          <!-- 16:9 Aspect Ratio Tweet Media Canvas -->
+          <div style="position:relative;width:100%;aspect-ratio:16 / 9;overflow:hidden;background:linear-gradient(135deg,#0f172a,#1e293b);">
+            <img src="${imgUrl}" onerror="this.style.opacity='0';" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.65;filter:brightness(0.85);transition:opacity 0.3s;">
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(9,13,22,0.92) 100%);padding:18px;display:flex;flex-direction:column;justify-content:space-between;z-index:2;">
+              <span style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:10px;width:fit-content;">X 16:9 MEDIA CARD · THREAD 🧵</span>
+              <div>
+                <div style="font-size:19px;font-weight:700;color:#ffffff;line-height:1.3;">${esc(title)}</div>
+              </div>
+            </div>
+          </div>
+          <div style="padding:10px 16px;display:flex;justify-content:space-between;color:rgba(255,255,255,0.6);font-size:12px;border-top:1px solid rgba(255,255,255,0.06);">
+            <span>💬 42</span> <span>🔁 128</span> <span>❤️ 650</span> <span>📊 24.5K</span>
+          </div>
+        </div>
+      `;
+    }
+
+    const pAbVariants = (pc.ab_variants && pc.ab_variants.length) ? pc.ab_variants : (ab.length ? ab.map((v, i) => {
+      const platformPrefix = p === 'linkedin' ? ['B2B / Professional', 'Thought Leadership', 'Case Study'][i % 3]
+                           : p === 'instagram' ? ['Visual Carousel', 'Behind-the-Scenes', 'Lifestyle Story'][i % 3]
+                           : ['Punchy Thread', 'Hot Take / Poll', 'Data Snippet'][i % 3];
+      return {
+        angle: `${platformPrefix} (${v.angle || 'Strategic Angle'})`,
+        hook: v.hook || pc.hook || subtitle,
+        message: v.message || pc.caption || pc.body || title
+      };
+    }) : [
+      { angle: p === 'linkedin' ? 'B2B Leadership' : p === 'instagram' ? 'Visual Storytelling' : 'Thread Hook', hook: pc.hook || title, message: pc.cta || subtitle },
+      { angle: p === 'linkedin' ? 'Data Case Study' : p === 'instagram' ? 'Carousel Guide' : 'Poll & Debate', hook: `Did you know? ${subtitle}`, message: pc.headline || title }
+    ]);
+
+    const pAbColors = [
+      { label: '#818cf8', bg: 'rgba(129, 140, 248, 0.12)', border: 'rgba(129, 140, 248, 0.3)' },
+      { label: '#fbbf24', bg: 'rgba(251, 191, 36, 0.12)', border: 'rgba(251, 191, 36, 0.3)' },
+      { label: '#34d399', bg: 'rgba(52, 211, 153, 0.12)', border: 'rgba(52, 211, 153, 0.3)' }
+    ];
+
+    const pAbHtml = pAbVariants.map((v, i) => {
+      const c = pAbColors[i % pAbColors.length];
+      return `
+        <div class="ab-card" style="border-left: 3px solid ${c.label};">
+          <div class="ab-label" style="color:${c.label};background:${c.bg};border:1px solid ${c.border}">${platformNames[p]} Variant ${String.fromCharCode(65+i)}</div>
+          ${v.angle   ? `<div class="ab-row"><span style="color:#94a3b8">Angle:</span> <strong style="color:#ffffff">${esc(v.angle)}</strong></div>` : ''}
+          ${v.hook    ? `<div class="ab-row"><span style="color:#94a3b8">Hook:</span> <em style="color:#fef08a;font-style:normal">${esc(v.hook)}</em></div>` : ''}
+          ${v.message ? `<div class="ab-row"><span style="color:#94a3b8">Message:</span> <span style="color:#e2e8f0">${esc(v.message)}</span></div>` : ''}
+        </div>
+      `;
+    }).join('');
+
     return `
       <div class="platform-panel" id="cpanel-${p}" style="display:none">
-        ${pc.headline  ? `<div class="cp-row"><span class="cp-label">Headline</span><div class="cp-val">${esc(pc.headline)}</div></div>` : ''}
-        ${pc.caption   ? `<div class="cp-row"><span class="cp-label">Caption</span><div class="cp-val">${esc(pc.caption)}</div></div>` : ''}
-        ${pc.hook      ? `<div class="cp-row"><span class="cp-label">Hook</span><div class="cp-val">${esc(pc.hook)}</div></div>` : ''}
-        ${pc.cta       ? `<div class="cp-row"><span class="cp-label">CTA</span><div class="cp-val">${esc(pc.cta)}</div></div>` : ''}
-        ${pc.body      ? `<div class="cp-row"><span class="cp-label">Body</span><div class="cp-val" style="white-space:pre-wrap">${esc(pc.body)}</div></div>` : ''}
-        ${pc.hashtags  ? `<div class="cp-row"><span class="cp-label">Hashtags</span><div class="cp-val" style="color:#fbbf24">${esc(Array.isArray(pc.hashtags)?pc.hashtags.join(' '):pc.hashtags)}</div></div>` : ''}
-        ${!Object.keys(pc).length ? '<div style="color:rgba(255,255,255,0.4);font-size:13px">No content generated for this platform.</div>' : ''}
+        ${cardMarkup}
+        ${pc.headline  ? `<div class="cp-row"><span class="cp-label" style="color:#38bdf8;background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.3)">Headline</span><div class="cp-val" style="font-size:16px;font-weight:600;color:#ffffff">${esc(pc.headline)}</div></div>` : ''}
+        ${pc.hook      ? `<div class="cp-row"><span class="cp-label" style="color:#fbbf24;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3)">Hook</span><div class="cp-val" style="font-size:14.5px;font-weight:500;color:#fef08a">${esc(pc.hook)}</div></div>` : ''}
+        ${pc.cta       ? `<div class="cp-row"><span class="cp-label" style="color:#4ade80;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.3)">Call to Action (CTA)</span><div class="cp-val" style="font-size:14px;font-weight:600;color:#86efac">${esc(pc.cta)}</div></div>` : ''}
+        ${pc.caption   ? `<div class="cp-row"><span class="cp-label" style="color:#a78bfa;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3)">Caption</span><div class="cp-val" style="white-space:pre-wrap;font-size:14px;line-height:1.6;color:#f1f5f9">${esc(pc.caption)}</div></div>` : ''}
+        ${pc.body      ? `<div class="cp-row"><span class="cp-label" style="color:#cbd5e1;background:rgba(203,213,225,0.12);border:1px solid rgba(203,213,225,0.3)">Body</span><div class="cp-val" style="white-space:pre-wrap;font-size:14px;line-height:1.6;color:#f1f5f9">${esc(pc.body)}</div></div>` : ''}
+        ${pc.hashtags  ? `<div class="cp-row"><span class="cp-label" style="color:#f472b6;background:rgba(244,114,182,0.12);border:1px solid rgba(244,114,182,0.3)">Hashtags</span><div class="cp-val" style="color:#f472b6;font-weight:500;font-size:13.5px">${esc(Array.isArray(pc.hashtags)?pc.hashtags.join(' '):pc.hashtags)}</div></div>` : ''}
+
+        <!-- Platform-Specific A/B Variants -->
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);">
+          <div class="cs-label" style="color:#fbbf24;margin-bottom:12px;">🎯 ${platformNames[p]} A/B Testing Variants</div>
+          <div class="ab-grid">${pAbHtml}</div>
+        </div>
+
+        ${!Object.keys(pc).length ? '<div style="color:rgba(255,255,255,0.4);font-size:13px;padding:12px 0">No content generated for this platform.</div>' : ''}
       </div>
     `;
   }).join('');
-
-  const abHtml = ab.length ? ab.map((v, i) => `
-    <div class="ab-card">
-      <div class="ab-label">Variant ${String.fromCharCode(65+i)}</div>
-      ${v.angle   ? `<div class="ab-row"><span>Angle:</span> ${esc(v.angle)}</div>` : ''}
-      ${v.hook    ? `<div class="ab-row"><span>Hook:</span> ${esc(v.hook)}</div>` : ''}
-      ${v.message ? `<div class="ab-row"><span>Message:</span> ${esc(v.message)}</div>` : ''}
-    </div>`).join('') : '<div style="color:rgba(255,255,255,0.4);font-size:13px">No A/B variants generated.</div>';
-
-  const bannerTitle = visual.headline || campaign.title || product;
-  const bannerImage = visual.image_url || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80';
-
-  const visualHtml = `
-    <div class="visual-concept-card" style="display:flex;flex-direction:column;gap:14px">
-      <div class="post-banner-preview" style="position:relative;width:100%;height:220px;border-radius:14px;overflow:hidden;background:linear-gradient(135deg,rgba(15,23,42,0.9),rgba(30,41,59,0.95));border:1px solid rgba(255,255,255,0.15);box-shadow:0 12px 30px rgba(0,0,0,0.5)">
-        <img src="${bannerImage}" alt="Post Banner" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.35;filter:brightness(0.8)">
-        <div style="position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:20px;background:linear-gradient(180deg,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.85) 100%)">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#d4e8a0;background:rgba(212,232,160,0.15);padding:4px 10px;border-radius:12px;border:1px solid rgba(212,232,160,0.3)">JA ASSURE · ${esc(product)}</span>
-            <span style="font-size:11px;color:rgba(255,255,255,0.7)">✨ AI Post Graphic</span>
-          </div>
-          <div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:#ffffff;line-height:1.2;text-shadow:0 2px 10px rgba(0,0,0,0.8)">${esc(bannerTitle)}</div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.75);margin-top:4px">${esc(visual.concept || messaging.hook || '')}</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:11px;color:#fbbf24;font-style:italic">Mood: ${esc(visual.mood || 'Premium, Trustworthy')}</span>
-            <button style="padding:6px 14px;border-radius:16px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-size:11px;font-weight:600;box-shadow:0 4px 12px rgba(245,158,11,0.4)">${esc(visual.cta || 'Learn More →')}</button>
-          </div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;color:rgba(255,255,255,0.7)">
-        ${visual.concept     ? `<div><strong style="color:#fff">Concept:</strong> ${esc(visual.concept)}</div>` : ''}
-        ${visual.composition ? `<div><strong style="color:#fff">Composition:</strong> ${esc(visual.composition)}</div>` : ''}
-      </div>
-    </div>`;
 
   resultsEl.innerHTML = `
     <div class="content-campaign-header">
@@ -570,19 +690,9 @@ function renderContentResults(data, product, platforms) {
     </div>` : ''}
 
     <div class="content-section">
-      <div class="cs-label">Generated Social Post Visual Banner</div>
-      ${visualHtml}
-    </div>
-
-    <div class="content-section">
-      <div class="cs-label">Platform Content</div>
-      <div class="platform-tabs">${platformTabsHtml}</div>
+      <div class="cs-label">Platform Content, Media Templates &amp; A/B Variants</div>
+      <div class="platform-tabs" style="display:flex;gap:12px;margin-bottom:16px;">${platformTabsHtml}</div>
       <div class="platform-panels">${platformContentHtml}</div>
-    </div>
-
-    <div class="content-section">
-      <div class="cs-label">A/B Variants</div>
-      <div class="ab-grid">${abHtml}</div>
     </div>
 
     <div class="review-row" style="margin-top:16px">
@@ -593,15 +703,26 @@ function renderContentResults(data, product, platforms) {
 
   // Activate first platform tab
   const firstTab = resultsEl.querySelector('.platform-tab');
-  if (firstTab) { firstTab.classList.add('active'); document.getElementById('cpanel-linkedin').style.display = 'block'; }
+  if (firstTab) {
+    const p = firstTab.dataset.platform || 'linkedin';
+    switchContentTab(p);
+  }
 }
 
 function switchContentTab(platform) {
-  document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.platform-tab').forEach(t => {
+    t.classList.remove('active');
+    t.style.background = 'rgba(255,255,255,0.05)';
+    t.style.borderColor = 'rgba(255,255,255,0.1)';
+  });
   document.querySelectorAll('.platform-panel').forEach(p => p.style.display = 'none');
   const tab = document.querySelector(`.platform-tab[data-platform="${platform}"]`);
   const panel = document.getElementById(`cpanel-${platform}`);
-  if (tab) tab.classList.add('active');
+  if (tab) {
+    tab.classList.add('active');
+    tab.style.background = 'rgba(255,255,255,0.18)';
+    tab.style.borderColor = 'rgba(255,255,255,0.4)';
+  }
   if (panel) panel.style.display = 'block';
 }
 window.switchContentTab = switchContentTab;
