@@ -448,6 +448,10 @@ STRICT PLATFORM FORMATTING REQUIREMENTS:
    - A clear call-to-action (CTA) for executives and decision makers.
 2. X (TWITTER): Write an authentic 5-PART TWITTER THREAD (1/5, 2/5, 3/5, 4/5, 5/5). Each part must start with the thread number (e.g. 1/5 🧵, 2/5 📊, 3/5 💡, 4/5 🛡️, 5/5 🔁). Include bite-sized data stats, bold insights, and a retweeting CTA.
 3. INSTAGRAM: Write a 5-slide carousel caption script (Slide 1 Hook, Slide 2-4 Breakdown, Slide 5 CTA) + full engaging caption text with emojis and hashtags.
+4. VIDEO (REELS / SHORTS / TIKTOK): Generate a 9:16 Short-Form Video Production Plan including:
+   - Suggested Music Track & Genre (e.g. "Upbeat Lo-Fi Synthbeat (110 BPM) — Energetic & Professional").
+   - AI Motion Video Prompt (Sora / Runway Gen-2 prompt).
+   - 4-Scene Storyboard Script with visual descriptions, timing cues, and voiceover audio lines.
 
 Return ONLY a valid JSON object (no markdown formatting, no code fences):
 {{
@@ -486,6 +490,25 @@ Return ONLY a valid JSON object (no markdown formatting, no code fences):
     "cta": "Retweet & Follow @JA_Assure 🔁",
     "hashtags": ["#FinTech", "#TechSG", "#RiskManagement"]
   }},
+  "video": {{
+    "headline": "High-Converting 9:16 Video Reel Script",
+    "concept": "Cinematic vertical video prompt for Runway Gen-2 / Sora: Modern office environment, sleek kinetic typography overlays, fast-paced cuts, high contrast corporate lighting.",
+    "music_suggestion": {{
+      "track": "Upbeat Lo-Fi Corporate Synthbeat",
+      "bpm": "112 BPM",
+      "mood": "Energetic, Trustworthy & Modern",
+      "pacing": "Fast-paced visual cuts every 2.5 seconds sync'd to bass drops"
+    }},
+    "storyboard": [
+      {{"scene": 1, "timing": "0:00 - 0:03", "visual": "Cinematic shot of a young professional looking at their phone with concern", "voiceover": "Did you know 65% of businesses delay risk audit until it's too late?"}},
+      {{"scene": 2, "timing": "0:03 - 0:08", "visual": "Fast transition to kinetic typography showing data stat 48-Hour Recovery", "voiceover": "A single unexpected claim delay can halt your business operations."}},
+      {{"scene": 3, "timing": "0:08 - 0:13", "visual": "Split screen showing JA Assure instant mobile approval portal", "voiceover": "JA Assure delivers instant, tailored coverage with 48h claims settlement."}},
+      {{"scene": 4, "timing": "0:13 - 0:18", "visual": "Bold gradient CTA end screen with glowing button graphic", "voiceover": "Don't gamble with your growth. Tap below to get covered with JA Assure today."}}
+    ],
+    "caption": "🎬 Don't let risk catch your business off guard. Watch how JA Assure provides bulletproof 48h claim protection! Link in bio to learn more.",
+    "cta": "Tap to Watch & Get Covered 👉",
+    "hashtags": ["#Reels", "#Shorts", "#JAAssure", "#BusinessTips", "#FinTech"]
+  }},
   "ab_variants": [
     {{"angle": "Executive B2B Angle", "hook": "Variant A Hook statement", "message": "Variant A core message"}},
     {{"angle": "Data-Driven Metric Angle", "hook": "Variant B Hook statement", "message": "Variant B core message"}},
@@ -508,7 +531,7 @@ Return only valid JSON."""
                         "model": "openai/gpt-oss-120b",
                         "messages": [{"role": "user", "content": prompt}],
                         "temperature": 0.5,
-                        "max_tokens": 2200,
+                        "max_tokens": 2400,
                     },
                 )
                 resp.raise_for_status()
@@ -560,6 +583,25 @@ Return only valid JSON."""
                 "body": f"1/5 🚨 {finding}. Here's why this is the biggest blindspot for businesses right now 🧵👇\n\n2/5 Most decision makers underestimate the true cost of downtime. When incidents occur, recovery costs average 4× the initial estimate.\n\n3/5 Traditional insurance policies weren't built for modern digital infrastructure. You need flexible, fast-settlement protection.\n\n4/5 That's why we built {product} at JA Assure—tailored coverage with 48-hour claim processing.\n\n5/5 What's your strategy for mitigating this risk? Drop your thoughts below & retweet to spread awareness 🔁",
                 "cta": "Retweet & Follow @JA_Assure 🔁",
                 "hashtags": ["#FinTech", "#TechSG", "#RiskManagement"]
+            },
+            "video": {
+                "headline": f"9:16 Video Reel Script: {product} Protection",
+                "concept": f"Cinematic vertical video prompt for Runway Gen-2 / Sora: Modern office environment, sleek kinetic typography overlays displaying '{finding}', fast-paced cuts, high contrast corporate lighting.",
+                "music_suggestion": {
+                    "track": "Upbeat Lo-Fi Corporate Synthbeat",
+                    "bpm": "112 BPM",
+                    "mood": "Energetic, Trustworthy & Modern",
+                    "pacing": "Fast-paced visual cuts every 2.5 seconds sync'd to bass drops"
+                },
+                "storyboard": [
+                    {"scene": 1, "timing": "0:00 - 0:03", "visual": f"Cinematic shot of professional looking at phone: '{finding}'", "voiceover": f"Did you know? {finding}"},
+                    {"scene": 2, "timing": "0:03 - 0:08", "visual": "Fast transition to kinetic typography showing 48-Hour Claim Turnaround", "voiceover": "Unprotected downtime can wipe out months of hard work."},
+                    {"scene": 3, "timing": "0:08 - 0:13", "visual": f"Split screen of JA Assure mobile portal instant quote", "voiceover": f"{product} gives you instant coverage tailored to modern risks."},
+                    {"scene": 4, "timing": "0:13 - 0:18", "visual": "Bold gradient CTA end screen with tap button", "voiceover": "Get covered in under 5 minutes. Tap below to start with JA Assure."}
+                ],
+                "caption": f"🎬 Don't wait for an unexpected risk to hit. Watch how {product} provides 48-hour claims turnaround! Tap link in bio to get covered.",
+                "cta": "Tap to Watch & Get Covered 👉",
+                "hashtags": ["#Reels", "#Shorts", "#JAAssure", "#FinTech", "#BusinessSafety"]
             },
             "ab_variants": [
                 {"angle": "Executive B2B Angle", "hook": f"Is your business prepared for {topic.lower()}?", "message": f"Discover how {product} provides bulletproof resilience."},

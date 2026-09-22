@@ -499,9 +499,10 @@ function renderContentResults(data, product, platforms) {
   const platformSvgIcons = {
     linkedin: `<svg width="15" height="15" viewBox="0 0 24 24" fill="#0077b5" style="vertical-align:middle"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>`,
     instagram: `<svg width="15" height="15" viewBox="0 0 24 24" fill="#e1306c" style="vertical-align:middle"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`,
-    x: `<svg width="15" height="15" viewBox="0 0 24 24" fill="#ffffff" style="vertical-align:middle"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`
+    x: `<svg width="15" height="15" viewBox="0 0 24 24" fill="#ffffff" style="vertical-align:middle"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
+    video: `🎬`
   };
-  const platformNames = { linkedin: 'LinkedIn', instagram: 'Instagram', x: 'X (Twitter)' };
+  const platformNames = { linkedin: 'LinkedIn', instagram: 'Instagram', x: 'X (Twitter)', video: '🎬 Video & Reel Script' };
 
   const platformTabsHtml = platformKeys.map(p => `
     <button class="platform-tab" data-platform="${p}" style="color: #ffffff; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; transition: all 0.2s;" onclick="switchContentTab('${p}')">${platformSvgIcons[p]} <span style="font-weight: 500; font-size: 13px;">${platformNames[p]}</span></button>
@@ -593,6 +594,89 @@ function renderContentResults(data, product, platforms) {
             <span>36 comments</span>
           </div>
         </div>
+      `;
+    } else if (p === 'video') {
+      const music = pc.music_suggestion || {};
+      const storyboard = pc.storyboard || [];
+
+      imgUrl = visual.image_url || `https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=600&h=1066&q=80`;
+      
+      const sbHtml = storyboard.map(s => `
+        <div style="background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.1);padding:14px;border-radius:12px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span style="font-size:11px;font-weight:700;color:#f43f5e;background:rgba(244,63,94,0.15);padding:2px 8px;border-radius:6px;">SCENE ${s.scene}</span>
+            <span style="font-size:11px;color:#94a3b8;font-weight:600;">${esc(s.timing)}</span>
+          </div>
+          <div style="font-size:13px;color:#f8fafc;margin-bottom:4px;">🎥 <strong>Visual:</strong> ${esc(s.visual)}</div>
+          <div style="font-size:13px;color:#fef08a;font-style:italic">🎙️ <strong>Voiceover:</strong> "${esc(s.voiceover)}"</div>
+        </div>
+      `).join('');
+
+      cardMarkup = `
+        <div class="video-mockup-card" style="width:100%;max-width:360px;margin:0 auto 20px auto;background:#090d16;border:2px solid rgba(244,63,94,0.5);border-radius:24px;overflow:hidden;box-shadow:0 24px 48px rgba(0,0,0,0.8);">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(15,23,42,0.95);border-bottom:1px solid rgba(255,255,255,0.06);">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#f43f5e,#fbbf24);display:flex;align-items:center;justify-content:center;font-size:14px;">🎬</div>
+              <span style="font-size:12px;font-weight:700;color:#fff;">9:16 Reel Preview</span>
+            </div>
+            <span style="font-size:10px;color:#f43f5e;background:rgba(244,63,94,0.18);padding:3px 8px;border-radius:12px;font-weight:bold;">● 0:18 REEL</span>
+          </div>
+
+          <!-- 9:16 Aspect Ratio Vertical Video Canvas -->
+          <div style="position:relative;width:100%;aspect-ratio:9 / 16;overflow:hidden;background:linear-gradient(135deg,#1e1b4b,#0f172a);">
+            <img src="${imgUrl}" onerror="this.style.opacity='0';" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.6;filter:brightness(0.85);transition:opacity 0.3s;">
+            
+            <!-- Dynamic Video Motion Gradient Overlay -->
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,rgba(9,13,22,0.85) 100%);padding:20px;display:flex;flex-direction:column;justify-content:space-between;z-index:2;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="background:rgba(244,63,94,0.3);border:1px solid rgba(244,63,94,0.6);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;">AI VIDEO PROMPT READY</span>
+              </div>
+
+              <!-- Center Play Button Overlay -->
+              <div style="align-self:center;width:56px;height:56px;border-radius:50%;background:rgba(244,63,94,0.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(244,63,94,0.6);cursor:pointer;">
+                <span style="color:#fff;font-size:22px;margin-left:4px;">▶</span>
+              </div>
+
+              <div>
+                <div style="font-size:18px;font-weight:700;color:#ffffff;line-height:1.25;text-shadow:0 2px 10px rgba(0,0,0,0.9);">${esc(title)}</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.9);margin-top:6px;text-shadow:0 1px 6px rgba(0,0,0,0.9);">${esc(subtitle)}</div>
+              </div>
+
+              <!-- Music Track Ticker Badge inside player -->
+              <div style="background:rgba(15,23,42,0.85);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);padding:8px 12px;border-radius:20px;display:flex;align-items:center;gap:8px;">
+                <span style="font-size:14px;">🎵</span>
+                <div style="font-size:11px;color:#fef08a;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                  ${esc(music.track || 'Upbeat Corporate Lo-Fi')} (${esc(music.bpm || '112 BPM')})
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Music Suggestion Card -->
+        <div class="cp-row" style="border-left: 3px solid #f43f5e; margin-top: 16px;">
+          <span class="cp-label" style="color:#f43f5e;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.3)">🎵 Suggested Audio &amp; Song Type</span>
+          <div class="cp-val">
+            <div style="font-size:15px;font-weight:700;color:#ffffff;margin-bottom:4px;">🎧 Track: <span style="color:#fef08a">${esc(music.track || 'Upbeat Lo-Fi Synthbeat')}</span></div>
+            <div style="font-size:13px;color:#94a3b8;margin-bottom:2px;">⚡ Tempo / BPM: <strong>${esc(music.bpm || '112 BPM')}</strong></div>
+            <div style="font-size:13px;color:#94a3b8;margin-bottom:2px;">✨ Mood: <strong>${esc(music.mood || 'Energetic, Trustworthy & Modern')}</strong></div>
+            <div style="font-size:13px;color:#94a3b8">✂️ Visual Pacing: <strong>${esc(music.pacing || 'Cut every 2.5 seconds sync\'d to bass drops')}</strong></div>
+          </div>
+        </div>
+
+        <!-- AI Video Generation Prompt -->
+        ${pc.concept ? `
+        <div class="cp-row" style="border-left: 3px solid #a78bfa; margin-top: 12px;">
+          <span class="cp-label" style="color:#a78bfa;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3)">🎬 AI Video Prompt (Sora / Runway Gen-2)</span>
+          <div class="cp-val" style="font-family:monospace;font-size:13px;color:#c084fc;background:rgba(15,23,42,0.8);padding:10px 14px;border-radius:8px;">${esc(pc.concept)}</div>
+        </div>` : ''}
+
+        <!-- 4-Scene Storyboard Breakdown -->
+        ${storyboard.length ? `
+        <div style="margin-top:16px;">
+          <div class="cs-label" style="color:#f43f5e;">🎥 Scene-by-Scene Storyboard &amp; Script</div>
+          <div>${sbHtml}</div>
+        </div>` : ''}
       `;
     } else {
       // 16:9 Aspect Ratio (X / Twitter Card)
